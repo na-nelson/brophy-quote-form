@@ -1,0 +1,43 @@
+@use '../../scss/variables' as *;
+
+.wp-block-nn-brophy-quote-form {
+	color: $bqf-color-text;
+}
+
+.brophy-quote-form__heading {
+	margin: 0 0 $bqf-space;
+}
+
+.brophy-quote-form__body {
+	padding: $bqf-space;
+	border: 1px solid $bqf-color-border;
+	border-radius: $bqf-radius;
+	background: $bqf-color-surface;
+}
+
+.brophy-quote-form__form {
+	display: grid;
+	gap: 1rem;
+}
+
+.brophy-quote-form__field {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.brophy-quote-form__form input,
+.brophy-quote-form__form button {
+	font: inherit;
+}
+
+.brophy-quote-form__form input {
+	padding: 0.6rem 0.75rem;
+	border: 1px solid $bqf-color-border;
+	border-radius: $bqf-radius;
+	background: #fff;
+	color: $bqf-color-text;
+}
+
+.brophy-quote-form__status {
+	margin: 0;
+}

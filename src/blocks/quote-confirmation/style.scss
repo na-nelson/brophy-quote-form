@@ -1,0 +1,13 @@
+@use '../../scss/variables' as *;
+
+.wp-block-nn-quote-confirmation {
+	color: $bqf-color-text;
+}
+
+.bqf-quote-confirmation__message {
+	margin: 0;
+	padding: $bqf-space;
+	border: 1px solid $bqf-color-border;
+	border-radius: $bqf-radius;
+	background: $bqf-color-surface;
+}

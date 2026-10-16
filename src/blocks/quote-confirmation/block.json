@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "nn/quote-confirmation",
+	"version": "0.1.0",
+	"title": "Quote Confirmation",
+	"category": "brophy-quote-form",
+	"icon": "yes-alt",
+	"description": "Message shown after a quote request.",
+	"attributes": {
+		"message": {
+			"type": "string",
+			"source": "html",
+			"selector": ".bqf-quote-confirmation__message",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"textdomain": "brophy-quote-form",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}

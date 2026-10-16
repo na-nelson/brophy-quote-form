@@ -1,0 +1,5 @@
+@use '../../scss/variables' as *;
+
+.bqf-quote-confirmation__message:empty::before {
+	color: $bqf-color-muted;
+}

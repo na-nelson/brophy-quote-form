@@ -1,0 +1,16 @@
+@use '../scss/variables' as *;
+
+.bqf-admin {
+	max-width: 40rem;
+	margin-top: $bqf-space;
+	padding: $bqf-space;
+	border: 1px solid $bqf-color-border;
+	border-radius: $bqf-radius;
+	background: $bqf-color-surface;
+	color: $bqf-color-text;
+}
+
+.bqf-admin__intro {
+	margin: 0;
+	color: $bqf-color-muted;
+}
