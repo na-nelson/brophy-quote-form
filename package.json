@@ -1,12 +1,12 @@
 {
 	"name": "brophy-quote-form",
 	"version": "0.1.0",
-	"description": "Quote form blocks and settings for Brophy Box.",
+	"description": "Quote form shortcode and settings for Brophy Box.",
 	"author": "Nelson & Nelson, LLC",
 	"license": "GPL-2.0-or-later",
 	"scripts": {
-		"build": "wp-scripts build --blocks-manifest",
-		"start": "wp-scripts start --blocks-manifest",
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:js": "wp-scripts lint-js",

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Brophy Quote Form
  * Plugin URI: https://www.nelsonnelson.llc/
- * Description: Quote form blocks and settings for Brophy Box.
+ * Description: Quote form shortcode and settings for Brophy Box.
  * Version: 0.1.0
  * Requires at least: 6.8
  * Requires PHP: 7.4
@@ -24,6 +24,22 @@ define( 'BQF_FILE', __FILE__ );
 define( 'BQF_PATH', plugin_dir_path( __FILE__ ) );
 define( 'BQF_URL', plugin_dir_url( __FILE__ ) );
 
-require_once BQF_PATH . 'includes/blocks.php';
+const BB_TABLES = [
+    'container_prices'   		=> 'tblMJAta4DETQrK3l',
+    'delivery_pricing_zones'    => 'tblsyDLEGIbvYqTpW',
+    'zip_codes'     			=> 'tblH8gIq8T09n985p',
+    'discounts'					=> 'tblTL8BvqzNOKd3uv',
+];
+
+const BB_TABLE_PRIMARY_FIELDS = [
+	'zip_codes'        => 'zip-code',
+	'container_prices' => 'id',
+	'delivery_pricing_zones' => 'id',
+    'discounts' => 'id',
+];
+
+
+require_once BQF_PATH . 'includes/brophy-box-airtable.php';
 require_once BQF_PATH . 'includes/admin.php';
-require_once BQF_PATH . 'includes/ajax.php';
+require_once BQF_PATH . 'includes/brophy-box-ajax.php';
+require_once BQF_PATH . 'includes/brophy-box-shortcode.php';

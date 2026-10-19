@@ -1,0 +1,247 @@
+@use '../scss/variables' as *;
+
+.bqf-has-results-section {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 2em;
+
+	.bqf-results-container {
+		order: -1;
+	}
+}
+
+.brophy-quote-form {
+	font-size: 1rem;
+}
+
+.bqf-form-container {
+	container-type: inline-size; // Allows for use of container queries
+}
+
+.bqf-form-wrap {
+	border: 1px solid var(--bqf-c-border);
+	padding-bottom: 2em;
+	background: var(--bqf-c-cream-lt);
+}
+
+.bqf-form-body,
+.bqf-submit-wrap {
+	padding-right: 1.5em;
+	padding-left: 1.5em;
+}
+
+.bqf-form-body {
+	padding-top: 2rem;
+}
+
+
+// ========== quote type ==========
+.bqf-field-group--quote-type {
+	display: flex;
+	flex-direction: row;
+	border-bottom: 1px solid var(--bqf-c-border);
+
+	.bqf-radio-group {
+		position: relative;
+		flex: 1;
+		padding: 1em;
+		text-align: center;
+		cursor: pointer;
+
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: -1px;
+			left: 0;
+			width: 100%;
+			height: 5px;
+			background: transparent;
+			transition: background 0.2s;
+		}
+
+		&:first-child {
+			border-right: 1px solid var(--bqf-c-border);
+		}
+
+		&:has(input:checked) {
+			pointer-events: none;
+
+			&::after {
+				background: var(--bqf-c-green-dk);
+			}
+		}
+
+		input {
+			position: absolute;
+			left: -9999px;
+			opacity: 0;
+		}
+	}
+
+	.bqf-type-label-text {
+		// font-size: 1em;
+		font-weight: 600;
+		font-family: var(--bqf-f-display);
+		text-transform: uppercase;
+	}
+}
+
+// ========== form header ==========
+.bqf-form-header {
+	margin-bottom: 1rem;
+
+	.heading {
+		margin: 0;
+	}
+}
+
+
+
+// ================================================================================
+// fields
+// ================================================================================
+
+.bqf-form-row {
+	margin-top: 1.5em;
+}
+
+.bqf-form-row--cols-2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1em;
+}
+
+.bqf-label-text {
+	display: block;
+	margin-bottom: 0.7em;
+	font-size: 0.9em;
+	font-weight: 800;
+	text-transform: uppercase;
+
+	&::before {
+		content: '';
+		position: relative;
+		top: -0.1em;
+		display: inline-block;
+		width: 0.5em;
+		aspect-ratio: 1/1;
+		margin-right: 0.5em;
+		background: var(--bqf-c-yellow);
+	}
+}
+
+.bqf-form {
+	input,
+	button {
+		font: inherit;
+	}
+
+	input[type="text"],
+	input[type="email"],
+	input[type="tel"],
+	input[type="number"],
+	input[type="date"],
+	select,
+	textarea {
+		width: 100%;
+		min-height: 3em;
+		border: 1px solid var(--bqf-c-border);
+		padding: 0.75em 1em;
+		background-color: var(--bqf-c-cream);
+		line-height: 1.2;
+	}
+
+	select {
+		appearance: none;
+		display: inline-block;
+		height: 2.5em;
+		border: 1px solid var(--bqf-c-border);
+		padding: 0 2em 0 1em;
+		// padding-right: 2em;
+		// padding-left: 1em;
+		background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="%23164538" d="M297.4 438.6C309.9 451.1 330.2 451.1 342.7 438.6L502.7 278.6C515.2 266.1 515.2 245.8 502.7 233.3C490.2 220.8 469.9 220.8 457.4 233.3L320 370.7L182.6 233.4C170.1 220.9 149.8 220.9 137.3 233.4C124.8 245.9 124.8 266.2 137.3 278.7L297.3 438.7z"/></svg>');
+		background-repeat: no-repeat;
+		background-position: right 0.5em center;
+		background-size: 1em;
+		font-size: 1em;
+		cursor: pointer;
+	}
+}
+
+.bqf-status {
+	margin: 0;
+}
+
+.bqf-field-error {
+	margin: 0.35em 0 0;
+	color: var(--bqf-c-red);
+	font-size: 0.875em;
+	font-weight: 700;
+	text-transform: none;
+}
+
+.bqf-field:has([aria-invalid='true']) {
+	input,
+	select {
+		border-color: var(--bqf-c-red);
+	}
+}
+
+// ========== qty field group ==========
+.bqf-qty-group {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 1em;
+	border: 1px solid var(--bqf-c-border);
+	padding: 1em;
+	background: var(--bqf-c-cream);
+
+	+ .bqf-qty-group {
+		margin-top: 1em;
+	}
+}
+
+.bqf-qty-group__label {
+	font-size: 1.2em;
+	font-weight: 700;
+}
+
+.bqf-qty-group__desc {
+	background: var(--bqf-c-yellow);
+    font-size: 0.75em;
+    font-weight: 700;
+    padding: 0.2em 0.5em;
+}
+
+.bqf-qty-group select {
+	width: unset;
+	min-width: 5em;
+	min-height: 2.5em;
+	margin-left: auto;
+	background-color: var(--bqf-c-cream-lt);
+}
+
+
+// ========== Conditional Display ==========
+.brophy-quote-form:has(#quote-type-purchase:checked) {
+	[data-cond-type="rent"] {
+		display: none;
+	}
+}
+
+.brophy-quote-form:has(#quote-type-rent:checked) {
+	[data-cond-type="purchase"] {
+		display: none;
+	}
+}
+
+
+// ========== Submit button ==========
+.bqf-submit-wrap {
+	margin-top: 1.5em;
+
+	button {
+		cursor: pointer;
+	}
+}

@@ -6,7 +6,7 @@ function AdminPage() {
 	return (
 		<div className="bqf-admin">
 			<p className="bqf-admin__intro">
-				{ __( 'Settings for the quote form will live here.', 'brophy-quote-form' ) }
+				{ __( 'Settings for the quote form will live here. [brophy_quote_form results_page="page-path"]', 'brophy-quote-form' ) }
 			</p>
 		</div>
 	);

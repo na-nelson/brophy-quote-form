@@ -2,15 +2,15 @@
 
 .bqf-admin {
 	max-width: 40rem;
-	margin-top: $bqf-space;
-	padding: $bqf-space;
-	border: 1px solid $bqf-color-border;
-	border-radius: $bqf-radius;
-	background: $bqf-color-surface;
-	color: $bqf-color-text;
+	margin-top: var(--bqf-space);
+	padding: var(--bqf-space);
+	border: 1px solid var(--bqf-color-border);
+	border-radius: var(--bqf-radius);
+	background: var(--bqf-color-surface);
+	color: var(--bqf-color-text);
 }
 
 .bqf-admin__intro {
 	margin: 0;
-	color: $bqf-color-muted;
+	color: var(--bqf-color-muted);
 }
