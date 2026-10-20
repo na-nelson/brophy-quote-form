@@ -151,11 +151,43 @@ function bqfShowError( $control, message ) {
 	$field.appendChild( $error );
 }
 
+function bqfValidateQuantities( $form ) {
+	const $qty20 = $form.querySelector( '[name="qty-20"]' );
+	const $qty40 = $form.querySelector( '[name="qty-40"]' );
+	const qty20 = $qty20 ? Number( $qty20.value ) : 0;
+	const qty40 = $qty40 ? Number( $qty40.value ) : 0;
+
+	if ( qty20 > 0 || qty40 > 0 ) {
+		return true;
+	}
+
+	[ $qty20, $qty40 ].forEach( ( $control ) => {
+		if ( $control ) {
+			$control.setAttribute( 'aria-invalid', 'true' );
+		}
+	} );
+
+	const $row = $form.querySelector( '.bqf-form-row--qty' );
+
+	if ( $row ) {
+		const $error = document.createElement( 'div' );
+		$error.className = 'bqf-field-error';
+		$error.textContent = 'Choose at least one container.';
+		$row.appendChild( $error );
+	}
+
+	return false;
+}
+
 function bqfValidateForm( $form ) {
 	const quoteType = bqfQuoteType( $form );
 	let valid = true;
 
 	bqfClearErrors( $form );
+
+	if ( ! bqfValidateQuantities( $form ) ) {
+		valid = false;
+	}
 
 	Object.entries( bqfFields ).forEach( ( [ key, field ] ) => {
 		if ( key === 'qty20' || key === 'qty40' || key === 'quoteType' ) {
@@ -191,11 +223,91 @@ function bqfValidateForm( $form ) {
 // ================================================================================
 // Submitting
 // ================================================================================
+const bqfPendingQuoteKey = 'bqfPendingQuote';
+
+function bqfQuoteValues( $form ) {
+	const values = {};
+
+	Object.values( bqfFields ).forEach( ( field ) => {
+		if ( field.type === 'radio' ) {
+			const $checked = $form.querySelector( `[name="${ field.name }"]:checked` );
+			values[ field.name ] = $checked ? $checked.value : '';
+			return;
+		}
+
+		const $control = $form.querySelector( `[name="${ field.name }"]` );
+		values[ field.name ] = $control ? $control.value : '';
+	} );
+
+	return values;
+}
+
+function bqfApplyQuoteValues( $form, values ) {
+	Object.entries( values ).forEach( ( [ name, value ] ) => {
+		const $controls = $form.querySelectorAll( `[name="${ name }"]` );
+
+		if ( ! $controls.length ) {
+			return;
+		}
+
+		if ( $controls[0].type === 'radio' ) {
+			$controls.forEach( ( $control ) => {
+				$control.checked = $control.value === value;
+			} );
+			return;
+		}
+
+		$controls[0].value = value ?? '';
+	} );
+}
+
+function bqfStoreQuote( $form ) {
+	try {
+		sessionStorage.setItem( bqfPendingQuoteKey, JSON.stringify( bqfQuoteValues( $form ) ) );
+		return true;
+	} catch ( error ) {
+		return false;
+	}
+}
+
+function bqfGetPendingQuote() {
+	let raw = null;
+
+	try {
+		raw = sessionStorage.getItem( bqfPendingQuoteKey );
+		sessionStorage.removeItem( bqfPendingQuoteKey );
+	} catch ( error ) {
+		return null;
+	}
+
+	if ( ! raw ) {
+		return null;
+	}
+
+	try {
+		const values = JSON.parse( raw );
+		return values && typeof values === 'object' ? values : null;
+	} catch ( error ) {
+		return null;
+	}
+}
+
 document.querySelectorAll( '.bqf-form' ).forEach( ( $form ) => {
 	$form.addEventListener( 'submit', ( event ) => {
 		bqfHandleSubmit( event, $form );
 	} );
 } );
+
+const bqfPendingQuote = bqfGetPendingQuote();
+
+if ( bqfPendingQuote ) {
+	const $pendingForm = document.querySelector( '.bqf-form' );
+
+	if ( $pendingForm ) {
+		bqfApplyQuoteValues( $pendingForm, bqfPendingQuote );
+		bqfHandleSubmit( { preventDefault() {} }, $pendingForm );
+	}
+}
 
 async function bqfHandleSubmit( event, $form ) {
 	event.preventDefault();
@@ -204,6 +316,13 @@ async function bqfHandleSubmit( event, $form ) {
 	const $btnSubmit = $form.querySelector( '[type="submit"]' );
 
 	if ( ! bqfValidateForm( $form ) ) {
+		return;
+	}
+
+	const resultsPage = $form.dataset.resultsPage;
+
+	if ( resultsPage && bqfStoreQuote( $form ) ) {
+		window.location.assign( resultsPage );
 		return;
 	}
 

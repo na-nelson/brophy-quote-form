@@ -4,20 +4,28 @@
  *
  * @package BrophyQuoteForm
  *
- * @var array $atts Shortcode attributes.
+ * @var array  $atts              Shortcode attributes.
+ * @var string $results_page_url Permalink for a published results page, or empty.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+if ( ! isset( $results_page_url ) ) {
+	$results_page_url = '';
+}
+
 ?>
 <div class="bqf-form-container">
-	<?php if ( ! empty( $atts['heading'] ) ) : ?>
+	<?php if ( !empty( $atts['heading'] ) ) : ?>
 		<h2 class="bqf-heading"><?php echo esc_html( $atts['heading'] ); ?></h2>
 	<?php endif; ?>
 
 	<div class="bqf-form-wrap">
-		<form class="bqf-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" novalidate>
+		<form class="bqf-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" novalidate
+			<?php echo $results_page_url ? ' data-results-page="' . esc_url( $results_page_url ) . '"' : ''; ?>
+		>
 			<?php wp_nonce_field( 'bqf_submit_quote', 'bqf_nonce' ); ?>
 			<input type="hidden" name="action" value="bqf_submit_quote" />
 

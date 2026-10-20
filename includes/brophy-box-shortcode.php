@@ -38,6 +38,38 @@ function bqf_enqueue_form_assets() {
 }
 
 /**
+ * Permalink for a results page path, or an empty string.
+ *
+ * The path must start with /.
+ *
+ * @param string $path Site path such as /quote-results.
+ * @return string
+ */
+function bqf_results_page_url( $path ) {
+	$path = trim( (string) $path );
+
+	if ( '' === $path || '/' !== substr( $path, 0, 1 ) ) {
+		return '';
+	}
+
+	$lookup = trim( $path, '/' );
+
+	if ( '' === $lookup ) {
+		return '';
+	}
+
+	$page = get_page_by_path( $lookup );
+
+	if ( ! $page instanceof WP_Post || 'publish' !== $page->post_status ) {
+		return '';
+	}
+
+	$permalink = get_permalink( $page );
+
+	return is_string( $permalink ) ? $permalink : '';
+}
+
+/**
  * Print the quote form.
  *
  * @param array $atts Shortcode attributes.
@@ -55,7 +87,8 @@ function bqf_render_quote_form( $atts ) {
 
 	bqf_enqueue_form_assets();
 
-	$block_class = ( empty($atts['results_page']) ) ? 'bqf-has-results-section' : '';
+	$results_page_url = bqf_results_page_url( $atts['results_page'] );
+	$block_class      = ( '' === $results_page_url ) ? 'bqf-has-results-section' : '';
 
 	ob_start();
 	?>

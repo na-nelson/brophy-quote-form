@@ -1,11 +1,16 @@
 @use '../scss/variables' as *;
 
+.bqf-results-container {
+	display: none;
+}
+
 .bqf-has-results-section {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 2em;
 
 	.bqf-results-container {
+		display: block;
 		order: -1;
 	}
 }
@@ -230,6 +235,10 @@
 	min-height: 2.5em;
 	margin-left: auto;
 	background-color: var(--bqf-c-cream-lt);
+}
+
+.bqf-qty-group:has([aria-invalid='true']) select {
+	border-color: var(--bqf-c-red);
 }
 
 
