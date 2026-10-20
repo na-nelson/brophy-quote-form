@@ -32,10 +32,10 @@ const BB_TABLES = [
 ];
 
 const BB_TABLE_PRIMARY_FIELDS = [
-	'zip_codes'        => 'zip-code',
-	'container_prices' => 'id',
-	'delivery_pricing_zones' => 'id',
-    'discounts' => 'id',
+	'zip_codes'                 => 'zip-code',
+	'container_prices'          => 'id',
+	'delivery_pricing_zones'    => 'id',
+    'discounts'                 => 'id',
 ];
 
 

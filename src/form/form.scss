@@ -149,6 +149,16 @@
 		padding: 0.75em 1em;
 		background-color: var(--bqf-c-cream);
 		line-height: 1.2;
+
+		&:focus,
+		&:focus-visible {
+			outline: none;
+			border: 1px solid var(--bqf-c-green-dk);
+		}
+
+		// &:-internal-autofill-selected {
+		// 	background-color: red;
+		// }
 	}
 
 	select {

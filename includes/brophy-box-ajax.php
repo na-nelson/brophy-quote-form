@@ -39,9 +39,10 @@ function bqf_submit_quote() {
 	// initialize response array
 	$arr_response = array(
 		'message' => null,
-		'fields' => $input_data,
+		'error'   => null,
+		'fields'  => $input_data,
 		'results' => array(),
-		'debug' => array(),
+		'debug'   => array(),
 	);
 
 	// setup calc data
@@ -71,12 +72,14 @@ function bqf_submit_quote() {
 	// get the chosen data
 	// ================================================================================
 	// ===== get the pricing zone ID =====
-	$pricing_zone_id = $zip_codes[$input_data['zip']]['pricing-zone-id'];
-	
-	if ( !isset( $pricing_zone_id ) ) {
-		$arr_response['message'] = 'ZIP code not found.';
-		wp_send_json_error($arr_response, 400);
+	$zip = $input_data['zip'];
+
+	if ( ! isset( $zip_codes[ $zip ]['pricing-zone-id'] ) || '' === $zip_codes[ $zip ]['pricing-zone-id'] ) {
+		$arr_response['error'] = 'zip';
+		wp_send_json_error( $arr_response, 400 );
 	}
+
+	$pricing_zone_id = $zip_codes[ $zip ]['pricing-zone-id'];
 
 	// ===== get calc data =====
 	if ( isset($input_data['quote-type']) ) {
@@ -106,15 +109,125 @@ function bqf_submit_quote() {
 		wp_send_json_error($arr_response, 400);
 	}
 
-	
-	$arr_response['debug']['calc-data'] = $calc_data;
 
 
 	// ================================================================================
 	// Calculations
 	// ================================================================================
+	$quote_type = $input_data['quote-type'];
+	$is_rent    = ( 'rent' === $quote_type );
+	$qty_20     = (float) $input_data['qty-20'];
+	$qty_40     = (float) $input_data['qty-40'];
+	$duration   = (float) $input_data['duration'];
+	$lines      = array();
+	$subtotal   = 0;
 
+	$arr_response['debug']['discounts'] = $discounts;
 
+	$containers = array(
+		array(
+			'label'      => "20' container",
+			'quantity'   => $qty_20,
+			'unit_price' => isset( $calc_data['price-20'] ) ? (float) $calc_data['price-20'] : 0,
+		),
+		array(
+			'label'      => "40' container",
+			'quantity'   => $qty_40,
+			'unit_price' => isset( $calc_data['price-40'] ) ? (float) $calc_data['price-40'] : 0,
+		),
+	);
+
+	foreach ( $containers as $container ) {
+		if ( $container['quantity'] <= 0 ) {
+			continue;
+		}
+
+		$amount = $container['quantity'] * $container['unit_price'];
+
+		if ( $is_rent ) {
+			$amount *= $duration;
+		}
+
+		$line = array(
+			'label'      => $container['label'],
+			'quantity'   => $container['quantity'],
+			'unit_price' => $container['unit_price'],
+			'amount'     => $amount,
+		);
+
+		if ( $is_rent ) {
+			$line['duration'] = $duration;
+		}
+
+		$lines[]   = $line;
+		$subtotal += $amount;
+	}
+
+	$container_count = $qty_20 + $qty_40;
+	$delivery_unit   = isset( $calc_data['price-delivery'] ) ? (float) $calc_data['price-delivery'] : 0;
+	$charges         = array(
+		array(
+			'label'      => 'Delivery',
+			'quantity'   => $container_count,
+			'unit_price' => $delivery_unit,
+			'amount'     => $container_count * $delivery_unit,
+		),
+	);
+
+	if ( $is_rent ) {
+		$pickup_unit = isset( $calc_data['price-pickup'] ) ? (float) $calc_data['price-pickup'] : 0;
+		$charges[]   = array(
+			'label'      => 'Pickup',
+			'quantity'   => $container_count,
+			'unit_price' => $pickup_unit,
+			'amount'     => $container_count * $pickup_unit,
+		);
+	}
+
+	$charges_subtotal = 0;
+
+	foreach ( $charges as $charge ) {
+		$charges_subtotal += $charge['amount'];
+	}
+
+	// ========== discounts ==========
+	$discount = isset( $calc_data['discount'] ) && is_array( $calc_data['discount'] ) ? $calc_data['discount'] : null;
+	$discount_amount = 0;
+	$discount_note   = '';
+
+	if ( $discount && isset( $discount['value-type'] ) && 'percent' === $discount['value-type'] ) {
+		$rate = ( isset( $discount['value'] ) ? (float) $discount['value'] : 0 ) / 100;
+		$discount_type = isset( $discount['discount-type'] ) ? $discount['discount-type'] : '';
+		$discount_note = isset( $discount['front-end-note'] ) ? $discount['front-end-note'] : '';
+
+		if ( 'purchase-price' === $discount_type ) {
+			$discount_amount = $subtotal * $rate;
+		} elseif ( 'rent-1-mo' === $discount_type ) {
+			$first_month = 0;
+
+			foreach ( $lines as $line ) {
+				$first_month += $line['quantity'] * $line['unit_price'];
+			}
+
+			$discount_amount = $first_month * $rate;
+		}
+	}
+
+	$discount_amount = round( $discount_amount, 2 );
+	$original_total  = round( $subtotal + $charges_subtotal, 2 );
+
+	$arr_response['results'] = array(
+		'lines'            => $lines,
+		'subtotal'         => $subtotal,
+		'charges'          => $charges,
+		'charges_subtotal' => $charges_subtotal,
+		'discount'         => array(
+			'amount'         => $discount_amount,
+			'message'        => $discount_note,
+			'original_total' => $original_total,
+		),
+		'total'            => round( $original_total - $discount_amount, 2 ),
+	);
 
 
 	// ========== validation ==========
