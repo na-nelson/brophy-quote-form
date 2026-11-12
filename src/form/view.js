@@ -466,6 +466,27 @@ function bqfFillResults( $form, results ) {
 	bqfSetRow( $wrap.querySelector( '.lines-subtotal-value' ), {
 		amount: results.subtotal,
 	} );
+
+	const discount = results.discount;
+	const hasDiscount = Boolean( discount && discount.amount );
+	const $linesSubtotalLabel = $wrap.querySelector( '.row-lines-subtotal .row-label' );
+
+	if ( $linesSubtotalLabel ) {
+		$linesSubtotalLabel.textContent = hasDiscount ? 'Subtotal before discount' : 'Subtotal';
+	}
+
+	bqfSetRow( $wrap.querySelector( '.lines-discount-value' ), hasDiscount ? {
+		amount: -Math.abs( discount.amount ),
+	} : null );
+	bqfSetRow( $wrap.querySelector( '.lines-discounted-subtotal-value' ), hasDiscount ? {
+		amount: discount.discounted_subtotal,
+	} : null );
+
+	const $linesDiscountMessage = $wrap.querySelector( '.lines-discount-message' );
+
+	if ( $linesDiscountMessage ) {
+		$linesDiscountMessage.textContent = hasDiscount ? ( discount.message || '' ) : '';
+	}
 	bqfSetRow( $wrap.querySelector( '.delivery-value' ), delivery || null );
 	bqfSetRow( $wrap.querySelector( '.pickup-value' ), pickup || null );
 	bqfSetRow( $wrap.querySelector( '.charges-subtotal-value' ), {
@@ -481,7 +502,6 @@ function bqfFillResults( $form, results ) {
 	const $discount = $wrap.querySelector( '.discount' );
 	const $discountValue = $wrap.querySelector( '.discount-value' );
 	const $discountMessage = $wrap.querySelector( '.discount-message' );
-	const discount = results.discount;
 
 	if ( $discount ) {
 		if ( discount && discount.amount ) {

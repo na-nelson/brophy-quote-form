@@ -42,6 +42,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<span class="unit-price"></span>
 				</span>
 			</div>
+			<div class="bqf-results__row bqf-results__row-discount row-lines-discount">
+				<span class="row-label">Discount</span>
+				<span class="row-value lines-discount-value">
+					<span class="unit-price"></span>
+					<span class="lines-discount-message"></span>
+				</span>
+			</div>
+			<div class="bqf-results__row bqf-results__row-subtotal row-lines-discounted-subtotal">
+				<span class="row-label">Discounted subtotal</span>
+				<span class="row-value lines-discounted-subtotal-value">
+					<span class="unit-price"></span>
+				</span>
+			</div>
 		</div>
 
 		<div class="bqf-results__section">
@@ -75,13 +88,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="discount">
 				<span class="discount-value"></span>
 				<span class="discount-message"></span>
-			</div>
-		</div>
-
-		<div class="bqf-results__bottom">
-			<div class="bqf-results__row">
-				<span class="row-label">Due Today</span>
-				<span class="row-value">$0.00</span>
 			</div>
 		</div>
 

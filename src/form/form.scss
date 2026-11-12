@@ -258,6 +258,11 @@
 
 // ========== Submit button ==========
 .bqf-submit-wrap {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1em;
 	margin-top: 1.5em;
 
 	button {

@@ -230,9 +230,10 @@ function bqf_submit_quote() {
 			'charges'          => $charges,
 			'charges_subtotal' => $charges_subtotal,
 			'discount'         => array(
-				'amount'         => $discount_amount,
-				'message'        => $discount_note,
-				'original_total' => $original_total,
+				'amount'              => $discount_amount,
+				'message'             => $discount_note,
+				'original_total'      => $original_total,
+				'discounted_subtotal' => round( $subtotal - $discount_amount, 2 ),
 			),
 			'total'            => round( $original_total - $discount_amount, 2 ),
 		);
