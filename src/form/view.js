@@ -46,10 +46,15 @@ const bqfFields = {
 		name: 'email',
 		id: 'email',
 	},
-	fullName: {
+	firstName: {
 		type: 'text',
-		name: 'full-name',
-		id: 'full-name',
+		name: 'first-name',
+		id: 'first-name',
+	},
+	lastName: {
+		type: 'text',
+		name: 'last-name',
+		id: 'last-name',
 	},
 	phone: {
 		type: 'text',

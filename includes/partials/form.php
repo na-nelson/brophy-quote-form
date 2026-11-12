@@ -135,13 +135,22 @@ if ( ! isset( $results_page_url ) ) {
 				</div>
 
 				<div class="bqf-form-row bqf-form-row--cols-2">
-					<label class="bqf-field" data-group-field="full-name">
-						<span class="bqf-label-text">Name<span class="bqf-required">*</span></span>
-						<input type="text" name="full-name" placeholder="Your name"
+					<label class="bqf-field" data-group-field="first-name">
+						<span class="bqf-label-text">First Name<span class="bqf-required">*</span></span>
+						<input type="text" name="first-name" placeholder="First name"
 							required
 						/>
 					</label>
 
+					<label class="bqf-field" data-group-field="last-name">
+						<span class="bqf-label-text">Last Name<span class="bqf-required">*</span></span>
+						<input type="text" name="last-name" placeholder="Last name"
+							required
+						/>
+					</label>
+				</div>
+
+				<div class="bqf-form-row">
 					<label class="bqf-field" data-group-field="phone">
 						<span class="bqf-label-text">Phone<span class="bqf-required">*</span></span>
 						<input type="tel" name="phone" placeholder="Your phone number"
