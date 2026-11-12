@@ -169,6 +169,8 @@ function bqf_submit_quote() {
 			$subtotal += $amount;
 		}
 
+		$subtotal = round( $subtotal, 2 );
+
 
 		// =========== charges ==========
 		$container_total_count = $qty_20 + $qty_40;
