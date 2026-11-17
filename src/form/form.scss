@@ -184,7 +184,44 @@
 }
 
 .bqf-status {
+	position: relative;
+	flex-grow: 1;
+	min-height: 1em;
 	margin: 0;
+}
+
+.bqf-status__spinner {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	display: inline-block;
+	width: 1.5rem;
+	height: 1.5rem;
+	background: currentColor;
+	mask-image: url('../../images/icon-spinner.svg');
+	transform: translateY(-50%) rotate(0deg);
+	opacity: 0;
+	transition: opacity 0.2s;
+
+	.bqf-form.loading & {
+		opacity: 0.5;
+		animation: spin 1.5s linear infinite;
+	}
+
+	@keyframes spin {
+		to {
+			transform: translateY(-50%) rotate(360deg);
+		}
+	}
+}
+
+.bqf-status__text {
+	opacity: 0;
+	transition: opacity 0.2s;
+
+	&.active {
+		opacity: 1;
+	}
 }
 
 .bqf-field-error {

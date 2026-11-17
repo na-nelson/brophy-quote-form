@@ -109,6 +109,7 @@ function bqf_submit_quote() {
 		}
 	} else {
 		$arr_response['message'] = 'Quote type is required.';
+		bqf_store_submission( $arr_response );
 		wp_send_json_error($arr_response, 400);
 	}
 
@@ -246,58 +247,67 @@ function bqf_submit_quote() {
 	// ================================================================================
 	// GHL
 	// ================================================================================
-	$ghlWebhookUrl = 'https://services.leadconnectorhq.com/hooks/PwiybZIuisMhkmSYHlPz/webhook-trigger/182a51d1-765a-4913-9559-f9c202bf16c1';
-	$arr_ghl = array(
-		'quote-type' => $input_data['quote-type'],
-		'qty-20' => $input_data['qty-20'],
-		'qty-40' => $input_data['qty-40'],
-		'zip' => $input_data['zip'],
-		'zip-within-range' => $zip_within_range,
-		'new-used' => $input_data['new-used'],
-		'duration' => $input_data['duration'],
-		'delivery-date' => $input_data['delivery-date'],
-		'first-name' => $input_data['first-name'],
-		'last-name' => $input_data['last-name'],
-		'email' => $input_data['email'],
-		'phone' => $input_data['phone'],
-		'quote-total' => $arr_response['results']['total'] ?? 0,
-		'source-url' => isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
-		'notification-text' => bqf_quote_notification_text( $input_data, $arr_response['results'], $zip_within_range ),
-	);
+	if ( is_user_logged_in() ) {
+		// user is logged in, do not send to GHL
+	} else {
+		// user is not logged in, send to GHL
+		$ghlWebhookUrl = 'https://services.leadconnectorhq.com/hooks/PwiybZIuisMhkmSYHlPz/webhook-trigger/182a51d1-765a-4913-9559-f9c202bf16c1';
+		$arr_ghl = array(
+			'quote-type' => $input_data['quote-type'],
+			'qty-20' => $input_data['qty-20'],
+			'qty-40' => $input_data['qty-40'],
+			'zip' => $input_data['zip'],
+			'zip-within-range' => $zip_within_range,
+			'new-used' => $input_data['new-used'],
+			'duration' => $input_data['duration'],
+			'delivery-date' => $input_data['delivery-date'],
+			'first-name' => $input_data['first-name'],
+			'last-name' => $input_data['last-name'],
+			'email' => $input_data['email'],
+			'phone' => $input_data['phone'],
+			'quote-total' => $arr_response['results']['total'] ?? 0,
+			'source-url' => isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
+			'notification-text' => bqf_quote_notification_text( $input_data, $arr_response['results'], $zip_within_range ),
+		);
 
-	$ghl_response = wp_remote_post(
-		$ghlWebhookUrl,
-		array(
-			'timeout' => 15,
-			'headers' => array(
-				'Content-Type' => 'application/json',
-			),
-			'body'    => wp_json_encode( $arr_ghl ),
-		)
-	);
+		$ghl_response = wp_remote_post(
+			$ghlWebhookUrl,
+			array(
+				'timeout' => 15,
+				'headers' => array(
+					'Content-Type' => 'application/json',
+				),
+				'body'    => wp_json_encode( $arr_ghl ),
+			)
+		);
 
-	if ( is_wp_error( $ghl_response ) ) {
-		$arr_response['message'] = 'The quote could not be sent. Please try again.';
-		wp_send_json_error( $arr_response, 502 );
-	}
+		if ( is_wp_error( $ghl_response ) ) {
+			$arr_response['message'] = 'The quote could not be sent. Please try again.';
+			bqf_store_submission( $arr_response );
+			wp_send_json_error( $arr_response, 502 );
+		}
 
-	$ghl_status = (int) wp_remote_retrieve_response_code( $ghl_response );
+		$ghl_status = (int) wp_remote_retrieve_response_code( $ghl_response );
 
-	if ( $ghl_status < 200 || $ghl_status >= 300 ) {
-		$arr_response['message'] = 'The quote could not be sent. Please try again.';
-		wp_send_json_error( $arr_response, 502 );
-	}
+		if ( $ghl_status < 200 || $ghl_status >= 300 ) {
+			$arr_response['message'] = 'The quote could not be sent. Please try again.';
+			bqf_store_submission( $arr_response );
+			wp_send_json_error( $arr_response, 502 );
+		}
 
 
-	if ( 'zip' === $arr_response['error'] ) {
-		wp_send_json_error( $arr_response, 400 );
+		if ( 'zip' === $arr_response['error'] ) {
+			bqf_store_submission( $arr_response );
+			wp_send_json_error( $arr_response, 400 );
+		}
 	}
 
 	// ================================================================================
-	// Csuccess
+	// Success
 	// ================================================================================
 	$arr_response['message'] = 'Quote sent.';
 
+	bqf_store_submission( $arr_response );
 	wp_send_json_success($arr_response, 200);
 }
 

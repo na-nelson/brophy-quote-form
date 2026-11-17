@@ -41,5 +41,6 @@ const BB_TABLE_PRIMARY_FIELDS = [
 
 require_once BQF_PATH . 'includes/brophy-box-airtable.php';
 require_once BQF_PATH . 'includes/admin.php';
+require_once BQF_PATH . 'includes/brophy-box-submissions.php';
 require_once BQF_PATH . 'includes/brophy-box-ajax.php';
 require_once BQF_PATH . 'includes/brophy-box-shortcode.php';

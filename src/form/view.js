@@ -297,28 +297,29 @@ function bqfGetPendingQuote() {
 	}
 }
 
-document.querySelectorAll( '.bqf-form' ).forEach( ( $form ) => {
-	$form.addEventListener( 'submit', ( event ) => {
+document.querySelectorAll('.bqf-form').forEach( ( $form ) => {
+	$form.addEventListener('submit', ( event ) => {
 		bqfHandleSubmit( event, $form );
-	} );
+	});
 } );
 
 const bqfPendingQuote = bqfGetPendingQuote();
 
 if ( bqfPendingQuote ) {
-	const $pendingForm = document.querySelector( '.bqf-form' );
+	const $pendingForm = document.querySelector('.bqf-form' );
 
 	if ( $pendingForm ) {
-		bqfApplyQuoteValues( $pendingForm, bqfPendingQuote );
-		bqfHandleSubmit( { preventDefault() {} }, $pendingForm );
+		bqfApplyQuoteValues($pendingForm, bqfPendingQuote);
+		bqfHandleSubmit({ preventDefault() {} }, $pendingForm);
 	}
 }
 
 async function bqfHandleSubmit( event, $form ) {
 	event.preventDefault();
 
-	const $status = $form.querySelector( '.bqf-status' );
-	const $btnSubmit = $form.querySelector( '[type="submit"]' );
+	// const $status = $form.querySelector('.bqf-status');
+	const $statusText = $form.querySelector('.bqf-status__text');
+	const $btnSubmit = $form.querySelector('[type="submit"]');
 
 	if ( ! bqfValidateForm( $form ) ) {
 		return;
@@ -332,7 +333,8 @@ async function bqfHandleSubmit( event, $form ) {
 	}
 
 	$btnSubmit.disabled = true;
-	$status.hidden = true;
+	$form.classList.add('loading');
+	$statusText.classList.remove('active');
 
 	try {
 		const response = await fetch( $form.getAttribute( 'action' ), {
@@ -362,16 +364,17 @@ async function bqfHandleSubmit( event, $form ) {
 				bqfFillResults( $form, result.data.results );
 			}
 
-			$status.hidden = false;
-			$status.textContent = result.data?.message ? result.data.message : 'Something went wrong.';
+			$statusText.classList.add('active');
+			$statusText.textContent = result.data?.message ? result.data.message : 'Something went wrong.';
 		}
 	} catch ( error ) {
 		bqfSetZipError( $form, false );
-		$status.hidden = false;
-		$status.textContent = 'Something went wrong.';
+		$statusText.classList.add('active');
+		$statusText.textContent = 'Something went wrong.';
 	}
 
 	$btnSubmit.disabled = false;
+	$form.classList.remove('loading');
 }
 
 

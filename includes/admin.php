@@ -11,19 +11,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Add the plugin admin page.
+ *
+ * The menu is visible to anyone who can view submissions. Settings is its own
+ * item for editors and administrators.
  */
 function bqf_admin_menu() {
 	add_menu_page(
 		__( 'Quote Form', 'brophy-quote-form' ),
 		__( 'Quote Form', 'brophy-quote-form' ),
-		'manage_options',
+		'read',
 		'brophy-quote-form',
 		'bqf_render_admin_page',
 		'dashicons-feedback',
 		58
 	);
+
+	add_submenu_page(
+		'brophy-quote-form',
+		__( 'Settings', 'brophy-quote-form' ),
+		__( 'Settings', 'brophy-quote-form' ),
+		'edit_others_posts',
+		'brophy-quote-form'
+	);
 }
 add_action( 'admin_menu', 'bqf_admin_menu' );
+
+/**
+ * Drop the automatic parent link for roles that cannot open settings.
+ *
+ * WordPress adds that link when Submissions is the first submenu item.
+ */
+function bqf_limit_quote_form_settings_menu() {
+	global $submenu;
+
+	if ( current_user_can( 'edit_others_posts' ) || empty( $submenu['brophy-quote-form'] ) || ! is_array( $submenu['brophy-quote-form'] ) ) {
+		return;
+	}
+
+	foreach ( $submenu['brophy-quote-form'] as $index => $item ) {
+		if ( isset( $item[2] ) && 'brophy-quote-form' === $item[2] ) {
+			unset( $submenu['brophy-quote-form'][ $index ] );
+		}
+	}
+}
+add_action( 'admin_menu', 'bqf_limit_quote_form_settings_menu', 99 );
 
 /**
  * Labels for the saved Airtable tables.
@@ -47,7 +78,7 @@ function bqf_handle_airtable_refresh() {
 		return;
 	}
 
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		return;
 	}
 
@@ -91,7 +122,7 @@ function bqf_handle_zip_error_message() {
 		return;
 	}
 
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'edit_others_posts' ) ) {
 		return;
 	}
 
@@ -110,8 +141,8 @@ add_action( 'admin_init', 'bqf_handle_zip_error_message' );
  * Print the admin page.
  */
 function bqf_render_admin_page() {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
+	if ( ! current_user_can( 'edit_others_posts' ) ) {
+		wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'brophy-quote-form' ), 403 );
 	}
 
 	$labels      = bqf_airtable_table_labels();

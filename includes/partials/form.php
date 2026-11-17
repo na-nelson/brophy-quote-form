@@ -162,7 +162,10 @@ if ( ! isset( $results_page_url ) ) {
 
 			<div class="bqf-submit-wrap">
 				<button type="submit" class="btn">Get a quote</button>
-				<p class="bqf-status" role="status" hidden></p>
+				<span class="bqf-status" role="status">
+					<span class="bqf-status__text"></span>
+					<span class="bqf-status__spinner"></span>
+				</span>
 			</div>
 		</form>
 	</div>
