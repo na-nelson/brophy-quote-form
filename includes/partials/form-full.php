@@ -30,20 +30,20 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 
 			<div class="bqf-field-group bqf-field-group--quote-type">
 				<label class="bqf-radio-group" for="quote-type-purchase">
-					<input id="quote-type-purchase" type="radio" name="quote-type" value="purchase" checked />
+					<input id="quote-type-purchase" type="radio" name="quote-type" value="Purchase" checked />
 					<span class="bqf-type-label-text">Purchase</span>
 				</label>
 				<label class="bqf-radio-group" for="quote-type-rent">
-					<input id="quote-type-rent" type="radio" name="quote-type" value="rent" />
+					<input id="quote-type-rent" type="radio" name="quote-type" value="Rental" />
 					<span class="bqf-type-label-text">Rental</span>
 				</label>
 			</div>
 
 			<div class="bqf-form-body">
-				<header class="bqf-form-header bqf-form-header--purchase" data-cond-type="purchase">
+				<header class="bqf-form-header bqf-form-header--purchase" data-cond-type="Purchase">
 					<h3 class="heading">Purchase Quote</h3>
 				</header>
-				<header class="bqf-form-header bqf-form-header--rent" data-cond-type="rent">
+				<header class="bqf-form-header bqf-form-header--rent" data-cond-type="Rental">
 					<h3 class="heading">Rental Quote</h3>
 				</header>
 
@@ -90,7 +90,7 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 					</label>
 				</div>
 
-				<div class="bqf-form-row" data-cond-type="purchase">
+				<div class="bqf-form-row" data-cond-type="Purchase">
 					<label class="bqf-field" data-group-field="new-used">
 						<span class="bqf-label-text">Would you like a new or a used container?<span class="bqf-required">*</span></span>
 						<select id="new-used" name="new-used">
@@ -100,7 +100,7 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 					</label>
 				</div>
 
-				<div class="bqf-form-row" data-cond-type="rent">
+				<div class="bqf-form-row" data-cond-type="Rental">
 					<label class="bqf-field" data-group-field="duration">
 						<span class="bqf-label-text">Rental Duration<span class="bqf-required">*</span></span>
 						<select id="duration" name="duration">

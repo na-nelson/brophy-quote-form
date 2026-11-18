@@ -339,13 +339,13 @@
 
 // ========== Conditional Display ==========
 .brophy-quote-form:has(#quote-type-purchase:checked) {
-	[data-cond-type="rent"] {
+	[data-cond-type="Rental"] {
 		display: none;
 	}
 }
 
 .brophy-quote-form:has(#quote-type-rent:checked) {
-	[data-cond-type="purchase"] {
+	[data-cond-type="Purchase"] {
 		display: none;
 	}
 }

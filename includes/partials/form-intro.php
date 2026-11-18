@@ -33,11 +33,11 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
                     <span class="bqf-label-text">Purchase or Rental?<span class="bqf-required">*</span></span>
 
                     <label class="bqf-radio-group" for="quote-type-purchase">
-                        <input id="quote-type-purchase" type="radio" name="quote-type" value="purchase" checked />
+                        <input id="quote-type-purchase" type="radio" name="quote-type" value="Purchase" checked />
                         <span class="bqf-type-label-text">Purchase</span>
                     </label>
                     <label class="bqf-radio-group" for="quote-type-rent">
-                        <input id="quote-type-rent" type="radio" name="quote-type" value="rent" />
+                        <input id="quote-type-rent" type="radio" name="quote-type" value="Rental" />
                         <span class="bqf-type-label-text">Rental</span>
                     </label>
 				</div>

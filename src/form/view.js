@@ -28,13 +28,13 @@ const bqfFields = {
 		type: 'select',
 		name: 'new-used',
 		id: 'new-used',
-		condition: 'purchase',
+		condition: 'Purchase',
 	},
 	duration: {
 		type: 'select',
 		name: 'duration',
 		id: 'duration',
-		condition: 'rent',
+		condition: 'Rental',
 	},
 	deliveryDate: {
 		type: 'date',

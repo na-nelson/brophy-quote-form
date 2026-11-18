@@ -24,7 +24,7 @@ function bqf_submit_quote() {
 
 	// setup input data
 	$input_data = array(
-		'quote-type' => isset( $_POST['quote-type'] ) ? sanitize_text_field( wp_unslash( $_POST['quote-type'] ) ) : 'purchase',
+		'quote-type' => isset( $_POST['quote-type'] ) ? sanitize_text_field( wp_unslash( $_POST['quote-type'] ) ) : 'Purchase',
 		'qty-20' => isset( $_POST['qty-20'] ) ? sanitize_text_field( wp_unslash( $_POST['qty-20'] ) ) : '',
 		'qty-40' => isset( $_POST['qty-40'] ) ? sanitize_text_field( wp_unslash( $_POST['qty-40'] ) ) : '',
 		'zip' => isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) ) : '',
@@ -86,7 +86,7 @@ function bqf_submit_quote() {
 	if ( ! $zip_within_range ) {
 		// Pricing needs a zone, so the receipt stays empty. The webhook still sends.
 	} elseif ( isset($input_data['quote-type']) ) {
-		if ( 'rent' == $input_data['quote-type'] ) {
+		if ( 'Rental' == $input_data['quote-type'] ) {
 			// continer price
 			$calc_data['price-20'] = $container_prices['20-standard-used']['price-rent-mo'];
 			$calc_data['price-40'] = $container_prices['40-standard-used']['price-rent-mo'];
@@ -94,7 +94,7 @@ function bqf_submit_quote() {
 			// delivery price
 			$calc_data['price-delivery'] = $delivery_zones[$pricing_zone_id]['price-delivery-rent'];
 			$calc_data['price-pickup'] = $delivery_zones[$pricing_zone_id]['price-delivery-pickup'];
-		} else if ( 'purchase' == $input_data['quote-type'] ) {
+		} else if ( 'Purchase' == $input_data['quote-type'] ) {
 			// continer price
 			if ( 'new' == $input_data['new-used'] ) {
 				$calc_data['price-20'] = $container_prices['20-standard-new']['price-sale'];
@@ -120,7 +120,7 @@ function bqf_submit_quote() {
 	// ================================================================================
 	if ( $zip_within_range ) {
 		$quote_type = $input_data['quote-type'];
-		$is_rent    = ('rent' === $quote_type);
+		$is_rent    = ('Rental' === $quote_type);
 		$qty_20     = (int) $input_data['qty-20'];
 		$qty_40     = (int) $input_data['qty-40'];
 		$duration   = (int) $input_data['duration'];
@@ -252,10 +252,20 @@ function bqf_submit_quote() {
 	} else {
 		// user is not logged in, send to GHL
 		$ghlWebhookUrl = 'https://services.leadconnectorhq.com/hooks/PwiybZIuisMhkmSYHlPz/webhook-trigger/182a51d1-765a-4913-9559-f9c202bf16c1';
+		$is_rental   = 'Rental' === $input_data['quote-type'];
+		$is_purchase = 'Purchase' === $input_data['quote-type'];
+		$is_new      = 'new' === $input_data['new-used'];
+		$is_used     = 'used' === $input_data['new-used'];
 		$arr_ghl = array(
 			'quote-type' => $input_data['quote-type'],
 			'qty-20' => $input_data['qty-20'],
 			'qty-40' => $input_data['qty-40'],
+			'qty-20-rent' => $is_rental ? $input_data['qty-20'] : '0',
+			'qty-40-rent' => $is_rental ? $input_data['qty-40'] : '0',
+			'qty-20-purchase-new' => ( $is_purchase && $is_new ) ? $input_data['qty-20'] : '0',
+			'qty-20-purchase-used' => ( $is_purchase && $is_used ) ? $input_data['qty-20'] : '0',
+			'qty-40-purchase-new' => ( $is_purchase && $is_new ) ? $input_data['qty-40'] : '0',
+			'qty-40-purchase-used' => ( $is_purchase && $is_used ) ? $input_data['qty-40'] : '0',
 			'zip' => $input_data['zip'],
 			'zip-within-range' => $zip_within_range,
 			'new-used' => $input_data['new-used'],
