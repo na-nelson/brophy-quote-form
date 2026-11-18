@@ -78,8 +78,8 @@ function bqf_results_page_url( $path ) {
 function bqf_render_quote_form( $atts ) {
 	$atts = shortcode_atts(
 		array(
-			'heading' => '',
 			'results_page' => '',
+			'form_type' => 'full',
 		),
 		$atts,
 		'brophy_quote_form'
@@ -88,13 +88,22 @@ function bqf_render_quote_form( $atts ) {
 	bqf_enqueue_form_assets();
 
 	$results_page_url = bqf_results_page_url( $atts['results_page'] );
-	$block_class      = ( '' === $results_page_url ) ? 'bqf-has-results-section' : '';
+	// $form_type = $atts['form_type'];
+
+	$block_class = ( '' === $results_page_url ) ? 'bqf-has-results-section' : '';
+	$block_class .= ' bqf-form--' . $atts['form_type'];
 
 	ob_start();
 	?>
 	<div class="brophy-quote-form bqf <?php echo esc_attr( $block_class ); ?>">
-		<?php include BQF_PATH . 'includes/partials/form.php'; ?>
-		<?php include BQF_PATH . 'includes/partials/results.php'; ?>
+		<?php
+		if ( 'intro' === $atts['form_type'] && $results_page_url ) {
+			include BQF_PATH . 'includes/partials/form-intro.php';
+		} else {
+			include BQF_PATH . 'includes/partials/form-full.php';
+		}
+		include BQF_PATH . 'includes/partials/results.php';
+		?>
 	</div>
 	<?php
 

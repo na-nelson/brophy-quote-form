@@ -159,6 +159,11 @@ function bqfShowError( $control, message ) {
 function bqfValidateQuantities( $form ) {
 	const $qty20 = $form.querySelector( '[name="qty-20"]' );
 	const $qty40 = $form.querySelector( '[name="qty-40"]' );
+
+	if ( ! $qty20 && ! $qty40 ) {
+		return true;
+	}
+
 	const qty20 = $qty20 ? Number( $qty20.value ) : 0;
 	const qty40 = $qty40 ? Number( $qty40.value ) : 0;
 
@@ -234,14 +239,19 @@ function bqfQuoteValues( $form ) {
 	const values = {};
 
 	Object.values( bqfFields ).forEach( ( field ) => {
+		const $controls = $form.querySelectorAll( `[name="${ field.name }"]` );
+
+		if ( ! $controls.length ) {
+			return;
+		}
+
 		if ( field.type === 'radio' ) {
 			const $checked = $form.querySelector( `[name="${ field.name }"]:checked` );
 			values[ field.name ] = $checked ? $checked.value : '';
 			return;
 		}
 
-		const $control = $form.querySelector( `[name="${ field.name }"]` );
-		values[ field.name ] = $control ? $control.value : '';
+		values[ field.name ] = $controls[0].value;
 	} );
 
 	return values;
@@ -310,7 +320,12 @@ if ( bqfPendingQuote ) {
 
 	if ( $pendingForm ) {
 		bqfApplyQuoteValues($pendingForm, bqfPendingQuote);
-		bqfHandleSubmit({ preventDefault() {} }, $pendingForm);
+
+		if ( bqfValidateForm( $pendingForm ) ) {
+			bqfHandleSubmit({ preventDefault() {} }, $pendingForm);
+		} else {
+			bqfClearErrors( $pendingForm );
+		}
 	}
 }
 

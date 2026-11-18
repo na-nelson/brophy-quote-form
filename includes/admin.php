@@ -164,6 +164,10 @@ function bqf_render_admin_page() {
 
 	echo '<div class="wrap">';
 	echo '<h1>Quote Form Settings</h1>';
+	echo '<div id="bqf-admin-root"></div>';
+
+	echo '<hr style="margin: 2rem 0;">';
+	
 	echo '<h2>Airtable data</h2>';
 
 	if ( $refreshed ) {
@@ -189,9 +193,6 @@ function bqf_render_admin_page() {
 	echo '<button type="submit" class="button button-primary" name="bqf_refresh_airtable" value="1">Refresh from Airtable</button>';
 	echo '</form>';
 
-	echo '<hr style="margin: 2rem 0;">';
-
-	echo '<div id="bqf-admin-root"></div>';
 	echo '</div>';
 
 	echo '<hr style="margin: 2rem 0;">';

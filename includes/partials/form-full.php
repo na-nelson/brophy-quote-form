@@ -4,24 +4,23 @@
  *
  * @package BrophyQuoteForm
  *
- * @var array  $atts              Shortcode attributes.
+ * @var array  $atts Shortcode attributes.
  * @var string $results_page_url Permalink for a published results page, or empty.
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! isset( $results_page_url ) ) {
+if ( !isset($results_page_url) ) {
 	$results_page_url = '';
 }
 
-?>
-<div class="bqf-form-container">
-	<?php if ( !empty( $atts['heading'] ) ) : ?>
-		<h2 class="bqf-heading"><?php echo esc_html( $atts['heading'] ); ?></h2>
-	<?php endif; ?>
+$form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 
+?>
+
+<div class="bqf-form-container">
 	<div class="bqf-form-wrap">
 		<form class="bqf-form" method="post" action="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" novalidate
 			<?php echo $results_page_url ? ' data-results-page="' . esc_url( $results_page_url ) . '"' : ''; ?>

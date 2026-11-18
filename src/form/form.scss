@@ -40,57 +40,6 @@
 }
 
 
-// ========== quote type ==========
-.bqf-field-group--quote-type {
-	display: flex;
-	flex-direction: row;
-	border-bottom: 1px solid var(--bqf-c-border);
-
-	.bqf-radio-group {
-		position: relative;
-		flex: 1;
-		padding: 1em;
-		text-align: center;
-		cursor: pointer;
-
-		&::after {
-			content: '';
-			position: absolute;
-			bottom: -1px;
-			left: 0;
-			width: 100%;
-			height: 5px;
-			background: transparent;
-			transition: background 0.2s;
-		}
-
-		&:first-child {
-			border-right: 1px solid var(--bqf-c-border);
-		}
-
-		&:has(input:checked) {
-			pointer-events: none;
-
-			&::after {
-				background: var(--bqf-c-green-dk);
-			}
-		}
-
-		input {
-			position: absolute;
-			left: -9999px;
-			opacity: 0;
-		}
-	}
-
-	.bqf-type-label-text {
-		// font-size: 1em;
-		font-weight: 600;
-		font-family: var(--bqf-f-display);
-		text-transform: uppercase;
-	}
-}
-
 // ========== form header ==========
 .bqf-form-header {
 	margin-bottom: 1rem;
@@ -181,8 +130,48 @@
 		font-size: 1em;
 		cursor: pointer;
 	}
+
+	.bqf-radio-group {
+		margin-right: 1.5em;
+		cursor: pointer;
+
+		input {
+			position: absolute;
+			left: -9999px;
+			opacity: 0;
+		}
+
+		.bqf-type-label-text {
+			display: inline-block;
+			font-weight: 500;
+			
+			&::before {
+				content: '';
+				display: inline-block;
+				width: 0.7em;
+				aspect-ratio: 1/1;
+				margin-right: 0.4em;
+				border: 1px solid var(--bqf-c-border);
+				background-color: var(--bqf-c-cream);
+				transition: border 0.1s, background 0.1s;
+			}
+		}
+
+		&:has(input:checked) {
+			.bqf-type-label-text {
+				&::before {
+					background-color: var(--bqf-c-yellow);
+					border-color: var(--bqf-c-green-dk);
+				}
+			}
+		}
+	}
 }
 
+
+// ================================================================================
+// form bottom
+// ================================================================================
 .bqf-status {
 	position: relative;
 	flex-grow: 1;
@@ -224,6 +213,11 @@
 	}
 }
 
+
+
+// ================================================================================
+// error
+// ================================================================================
 .bqf-field-error {
 	margin: 0.35em 0 0;
 	color: var(--bqf-c-red);
@@ -238,6 +232,70 @@
 		border-color: var(--bqf-c-red);
 	}
 }
+
+
+
+
+// ================================================================================
+// special fields
+// ================================================================================
+
+// ========== quote type ==========
+.bqf-form .bqf-field-group--quote-type {
+	display: flex;
+	flex-direction: row;
+	border-bottom: 1px solid var(--bqf-c-border);
+
+	.bqf-radio-group {
+		position: relative;
+		flex: 1;
+		margin: 0;
+		padding: 1em;
+		text-align: center;
+		cursor: pointer;
+
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: -1px;
+			left: 0;
+			width: 100%;
+			height: 5px;
+			background: transparent;
+			transition: background 0.2s;
+		}
+
+		&:first-child {
+			border-right: 1px solid var(--bqf-c-border);
+		}
+
+		&:has(input:checked) {
+			pointer-events: none;
+
+			&::after {
+				background: var(--bqf-c-green-dk);
+			}
+		}
+
+		input {
+			position: absolute;
+			left: -9999px;
+			opacity: 0;
+		}
+	}
+
+	.bqf-type-label-text {
+		// font-size: 1em;
+		font-weight: 600;
+		font-family: var(--bqf-f-display);
+		text-transform: uppercase;
+
+		&::before {
+			display: none;
+		}
+	}
+}
+
 
 // ========== qty field group ==========
 .bqf-qty-group {
@@ -301,8 +359,20 @@
 	align-items: center;
 	gap: 1em;
 	margin-top: 1.5em;
+	font-weight: 700;
 
 	button {
 		cursor: pointer;
+	}
+}
+
+
+
+// ================================================================================
+// Intro Form
+// ================================================================================
+.bqf-form--intro {
+	.bqf-form-body {
+		padding-top: 0.5em;
 	}
 }

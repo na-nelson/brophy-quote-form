@@ -5,9 +5,15 @@ import './admin.scss';
 function AdminPage() {
 	return (
 		<div className="bqf-admin">
-			<p className="bqf-admin__intro">
-				{ __( 'Settings for the quote form will live here. [brophy_quote_form results_page="page-path"]', 'brophy-quote-form' ) }
-			</p>
+			<h3>Quote Form Shortcode Options</h3>
+			<p>The default option has both the form and results in the same page.<br/>
+			<strong style={{ fontFamily: 'monospace' }}>[brophy_quote_form]</strong></p>
+
+			<p>Add 'results_page' to show the full form and have the results display on a separate page.<br/>
+			<strong style={{ fontFamily: 'monospace' }}>[brophy_quote_form results_page="/example/page-path"]</strong></p>
+
+			<p>Add 'form_type="intro"' to show an abbreviated form. This option requires a 'results_page' to be set.<br/>
+			<strong style={{ fontFamily: 'monospace' }}>[brophy_quote_form form_type="intro" results_page="/example/page-path"]</strong></p>
 		</div>
 	);
 }
