@@ -266,6 +266,12 @@ function bqf_submit_quote() {
 			'qty-20-purchase-used' => ( $is_purchase && $is_used ) ? $input_data['qty-20'] : '',
 			'qty-40-purchase-new' => ( $is_purchase && $is_new ) ? $input_data['qty-40'] : '',
 			'qty-40-purchase-used' => ( $is_purchase && $is_used ) ? $input_data['qty-40'] : '',
+			'unit-price-20-rent' => $container_prices['20-standard-used']['price-rent-mo'],
+			'unit-price-40-rent' => $container_prices['40-standard-used']['price-rent-mo'],
+			'unit-price-20-purchase-new' => $container_prices['20-standard-new']['price-sale'],
+			'unit-price-20-purchase-used' => $container_prices['20-standard-used']['price-sale'],
+			'unit-price-40-purchase-new' => $container_prices['40-standard-new']['price-sale'],
+			'unit-price-40-purchase-used' => $container_prices['40-standard-used']['price-sale'],
 			'zip' => $input_data['zip'],
 			'zip-within-range' => $zip_within_range,
 			'new-used' => $input_data['new-used'],
@@ -284,7 +290,7 @@ function bqf_submit_quote() {
 			'total-original' => $arr_response['results']['discount']['original_total'] ?? '',
 			'total-discounted' => $arr_response['results']['total'] ?? '',
 			'source-url' => isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '',
-			'notification-text' => bqf_quote_notification_text( $input_data, $arr_response['results'], $zip_within_range ),
+			// 'notification-text' => bqf_quote_notification_text( $input_data, $arr_response['results'], $zip_within_range ),
 		);
 
 		$ghl_response = wp_remote_post(
@@ -336,94 +342,94 @@ function bqf_submit_quote() {
  * @param bool  $zip_within_range Whether the ZIP matched a pricing zone.
  * @return string
  */
-function bqf_quote_notification_text( $input_data, $results, $zip_within_range ) {
-	$money = function ( $amount ) {
-		return '$' . number_format( (float) $amount, 2 );
-	};
+// function bqf_quote_notification_text( $input_data, $results, $zip_within_range ) {
+// 	$money = function ( $amount ) {
+// 		return '$' . number_format( (float) $amount, 2 );
+// 	};
 
-	$lines = array( 'Quote request', '' );
+// 	$lines = array( 'Quote request', '' );
 
-	$fields = array(
-		'first-name'    => 'First name',
-		'last-name'     => 'Last name',
-		'email'         => 'Email',
-		'phone'         => 'Phone',
-		'quote-type'    => 'Quote type',
-		'new-used'      => 'New or used',
-		'qty-20'        => "20' containers",
-		'qty-40'        => "40' containers",
-		'duration'      => 'Rental duration (months)',
-		'zip'           => 'ZIP code',
-		'delivery-date' => 'Delivery date',
-	);
+// 	$fields = array(
+// 		'first-name'    => 'First name',
+// 		'last-name'     => 'Last name',
+// 		'email'         => 'Email',
+// 		'phone'         => 'Phone',
+// 		'quote-type'    => 'Quote type',
+// 		'new-used'      => 'New or used',
+// 		'qty-20'        => "20' containers",
+// 		'qty-40'        => "40' containers",
+// 		'duration'      => 'Rental duration (months)',
+// 		'zip'           => 'ZIP code',
+// 		'delivery-date' => 'Delivery date',
+// 	);
 
-	foreach ( $fields as $key => $label ) {
-		$lines[] = $label . ': ' . ( isset( $input_data[ $key ] ) ? $input_data[ $key ] : '' );
-	}
+// 	foreach ( $fields as $key => $label ) {
+// 		$lines[] = $label . ': ' . ( isset( $input_data[ $key ] ) ? $input_data[ $key ] : '' );
+// 	}
 
-	foreach ( $input_data as $key => $value ) {
-		if ( isset( $fields[ $key ] ) ) {
-			continue;
-		}
+// 	foreach ( $input_data as $key => $value ) {
+// 		if ( isset( $fields[ $key ] ) ) {
+// 			continue;
+// 		}
 
-		$lines[] = $key . ': ' . ( is_scalar( $value ) ? $value : wp_json_encode( $value ) );
-	}
+// 		$lines[] = $key . ': ' . ( is_scalar( $value ) ? $value : wp_json_encode( $value ) );
+// 	}
 
-	$lines[] = 'ZIP within range: ' . ( $zip_within_range ? 'yes' : 'no' );
+// 	$lines[] = 'ZIP within range: ' . ( $zip_within_range ? 'yes' : 'no' );
 
-	if ( ! $zip_within_range ) {
-		return implode( "\n", $lines );
-	}
+// 	if ( ! $zip_within_range ) {
+// 		return implode( "\n", $lines );
+// 	}
 
-	$lines[] = '';
-	$lines[] = 'Containers';
+// 	$lines[] = '';
+// 	$lines[] = 'Containers';
 
-	$result_lines = isset( $results['lines'] ) && is_array( $results['lines'] ) ? $results['lines'] : array();
+// 	$result_lines = isset( $results['lines'] ) && is_array( $results['lines'] ) ? $results['lines'] : array();
 
-	if ( ! $result_lines ) {
-		$lines[] = 'None';
-	}
+// 	if ( ! $result_lines ) {
+// 		$lines[] = 'None';
+// 	}
 
-	foreach ( $result_lines as $line ) {
-		$text = ( isset( $line['quantity'] ) ? $line['quantity'] : 0 ) . ' x ' . ( isset( $line['label'] ) ? $line['label'] : '' );
+// 	foreach ( $result_lines as $line ) {
+// 		$text = ( isset( $line['quantity'] ) ? $line['quantity'] : 0 ) . ' x ' . ( isset( $line['label'] ) ? $line['label'] : '' );
 
-		if ( isset( $line['duration'] ) && '' !== $line['duration'] ) {
-			$text .= ' x ' . $line['duration'] . ' mo';
-		}
+// 		if ( isset( $line['duration'] ) && '' !== $line['duration'] ) {
+// 			$text .= ' x ' . $line['duration'] . ' mo';
+// 		}
 
-		$text   .= ' @ ' . $money( isset( $line['unit_price'] ) ? $line['unit_price'] : 0 );
-		$text   .= ' = ' . $money( isset( $line['amount'] ) ? $line['amount'] : 0 );
-		$lines[] = $text;
-	}
+// 		$text   .= ' @ ' . $money( isset( $line['unit_price'] ) ? $line['unit_price'] : 0 );
+// 		$text   .= ' = ' . $money( isset( $line['amount'] ) ? $line['amount'] : 0 );
+// 		$lines[] = $text;
+// 	}
 
-	$lines[] = 'Subtotal: ' . $money( isset( $results['subtotal'] ) ? $results['subtotal'] : 0 );
-	$lines[] = '';
-	$lines[] = 'Transportation';
+// 	$lines[] = 'Subtotal: ' . $money( isset( $results['subtotal'] ) ? $results['subtotal'] : 0 );
+// 	$lines[] = '';
+// 	$lines[] = 'Transportation';
 
-	$charges = isset( $results['charges'] ) && is_array( $results['charges'] ) ? $results['charges'] : array();
+// 	$charges = isset( $results['charges'] ) && is_array( $results['charges'] ) ? $results['charges'] : array();
 
-	foreach ( $charges as $charge ) {
-		$text    = ( isset( $charge['quantity'] ) ? $charge['quantity'] : 0 ) . ' x ' . ( isset( $charge['label'] ) ? $charge['label'] : '' );
-		$text   .= ' @ ' . $money( isset( $charge['unit_price'] ) ? $charge['unit_price'] : 0 );
-		$text   .= ' = ' . $money( isset( $charge['amount'] ) ? $charge['amount'] : 0 );
-		$lines[] = $text;
-	}
+// 	foreach ( $charges as $charge ) {
+// 		$text    = ( isset( $charge['quantity'] ) ? $charge['quantity'] : 0 ) . ' x ' . ( isset( $charge['label'] ) ? $charge['label'] : '' );
+// 		$text   .= ' @ ' . $money( isset( $charge['unit_price'] ) ? $charge['unit_price'] : 0 );
+// 		$text   .= ' = ' . $money( isset( $charge['amount'] ) ? $charge['amount'] : 0 );
+// 		$lines[] = $text;
+// 	}
 
-	$lines[] = 'Subtotal: ' . $money( isset( $results['charges_subtotal'] ) ? $results['charges_subtotal'] : 0 );
+// 	$lines[] = 'Subtotal: ' . $money( isset( $results['charges_subtotal'] ) ? $results['charges_subtotal'] : 0 );
 
-	$discount = isset( $results['discount'] ) && is_array( $results['discount'] ) ? $results['discount'] : array();
-	$note     = isset( $discount['message'] ) ? trim( wp_strip_all_tags( (string) $discount['message'] ) ) : '';
+// 	$discount = isset( $results['discount'] ) && is_array( $results['discount'] ) ? $results['discount'] : array();
+// 	$note     = isset( $discount['message'] ) ? trim( wp_strip_all_tags( (string) $discount['message'] ) ) : '';
 
-	$lines[] = '';
-	$lines[] = 'Discount: ' . $money( isset( $discount['amount'] ) ? $discount['amount'] : 0 );
+// 	$lines[] = '';
+// 	$lines[] = 'Discount: ' . $money( isset( $discount['amount'] ) ? $discount['amount'] : 0 );
 
-	if ( '' !== $note ) {
-		$lines[] = 'Discount note: ' . $note;
-	}
+// 	if ( '' !== $note ) {
+// 		$lines[] = 'Discount note: ' . $note;
+// 	}
 
-	$lines[] = 'Original total: ' . $money( isset( $discount['original_total'] ) ? $discount['original_total'] : 0 );
-	$lines[] = 'Total: ' . $money( isset( $results['total'] ) ? $results['total'] : 0 );
+// 	$lines[] = 'Original total: ' . $money( isset( $discount['original_total'] ) ? $discount['original_total'] : 0 );
+// 	$lines[] = 'Total: ' . $money( isset( $results['total'] ) ? $results['total'] : 0 );
 
-	return implode( "\n", $lines );
-}
+// 	return implode( "\n", $lines );
+// }
 
