@@ -33,6 +33,15 @@ function bqf_admin_menu() {
 		'edit_others_posts',
 		'brophy-quote-form'
 	);
+
+	add_submenu_page(
+		'brophy-quote-form',
+		__( 'Options', 'brophy-quote-form' ),
+		__( 'Options', 'brophy-quote-form' ),
+		'edit_others_posts',
+		'brophy-quote-form-options',
+		'bqf_render_options_page'
+	);
 }
 add_action( 'admin_menu', 'bqf_admin_menu' );
 
@@ -164,10 +173,6 @@ function bqf_render_admin_page() {
 
 	echo '<div class="wrap">';
 	echo '<h1>Quote Form Settings</h1>';
-	echo '<div id="bqf-admin-root"></div>';
-
-	echo '<hr style="margin: 2rem 0;">';
-	
 	echo '<h2>Airtable data</h2>';
 
 	if ( $refreshed ) {
@@ -216,6 +221,51 @@ function bqf_render_admin_page() {
 }
 
 /**
+ * Print the shortcode notes.
+ */
+function bqf_render_options_page() {
+	if ( ! current_user_can( 'edit_others_posts' ) ) {
+		wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'brophy-quote-form' ), 403 );
+	}
+
+	echo '<div class="bqf-options-wrap">';
+	echo '<h1>Options</h1>';
+
+	echo '<h2>Quote Form Shortcode Options</h2>';
+
+	echo '<div class="bqf-options-item">';
+	echo '<p>The default option has both the form and results in the same page.</p>';
+	echo '<code>[brophy_quote_form]</code>';
+	echo '</div>';
+
+	echo '<div class="bqf-options-item">';
+	echo '<p>Add <span class="inline-mono">results_page</span> to show the full form and have the results display on a separate page.</p>';
+	echo '<code>[brophy_quote_form results_page="/example/page-path"]</code>';
+	echo '</div>';
+
+	echo '<div class="bqf-options-item">';
+	echo '<p>Add <span class="inline-mono">form_type="intro"</span> to show an abbreviated form. This option requires a <span class="inline-mono">results_page</span> to be set.</p>';
+	echo '<code>[brophy_quote_form form_type="intro" results_page="/example/page-path"]</code>';
+	echo '</div>';
+
+	echo '<div class="bqf-options-item">';
+	echo '<p>Add <span class="inline-mono">heading="Your Heading Here"</span> to display a custom heading above the form.</p>';
+	echo '<code>[brophy_quote_form heading="Your Heading Here"]</code>';
+	echo '</div>';
+
+	echo '<hr>';
+
+	echo '<h2>Quote Results Shortcode Options</h2>';
+
+	echo '<div class="bqf-options-item">';
+	echo '<p><strong><u>The Results shortcode is required</u></strong> to be included in a page that displays the results.</p>';
+	echo '<code>[brophy_quote_results]</code>';
+	echo '</div>';
+
+	echo '</div>';
+}
+
+/**
  * Build the notice shown after a refresh.
  *
  * @param array<string, int|false> $results Refresh results.
@@ -248,38 +298,24 @@ function bqf_airtable_refresh_notice( $results, $labels ) {
 }
 
 /**
- * Enqueue the admin script and styles on the plugin page.
+ * Load admin styles and the ZIP message editor.
  *
  * @param string $hook Current admin page hook.
  */
 function bqf_enqueue_admin_assets( $hook ) {
+	if ( 'quote-form_page_brophy-quote-form-options' === $hook ) {
+		wp_enqueue_style(
+			'bqf-admin',
+			BQF_URL . 'assets/admin.css',
+			array(),
+			BQF_VERSION
+		);
+	}
+
 	if ( 'toplevel_page_brophy-quote-form' !== $hook ) {
 		return;
 	}
 
 	wp_enqueue_editor();
-
-	$asset_path = BQF_PATH . 'build/admin.asset.php';
-
-	if ( ! file_exists( $asset_path ) ) {
-		return;
-	}
-
-	$asset = include $asset_path;
-
-	wp_enqueue_script(
-		'bqf-admin',
-		BQF_URL . 'build/admin.js',
-		$asset['dependencies'],
-		$asset['version'],
-		true
-	);
-
-	wp_enqueue_style(
-		'bqf-admin',
-		BQF_URL . 'build/admin.css',
-		array(),
-		$asset['version']
-	);
 }
 add_action( 'admin_enqueue_scripts', 'bqf_enqueue_admin_assets' );

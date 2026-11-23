@@ -1,0 +1,36 @@
+.bqf-options-wrap {
+	max-width: 55rem;
+	margin: 2rem;
+	padding: 2rem;
+	background-color: color-mix(in srgb, #fff 97%, #000);
+	border: 1px solid #ccc;
+	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.bqf-options-wrap hr {
+	margin: 2em 0;
+}
+
+.bqf-options-wrap .inline-mono {
+	/* color: #000; */
+	background: #fff;
+	font-family: monospace;
+	/* font-weight: 700; */
+}
+
+.bqf-options-wrap code {
+	padding: 0.5em;
+	background-color: #fff;
+}
+
+.bqf-options-item {
+	margin-top: 2em;
+}
+
+.bqf-options-item > *:first-child {
+	margin-top: 0;
+}
+
+.bqf-options-item > *:last-child {
+	margin-bottom: 0;
+}
