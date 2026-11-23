@@ -549,13 +549,14 @@ function bqfSetRow( $value, data ) {
 }
 
 function bqfFillResults( $form, results ) {
-	const $root = $form.closest('.bqf');
+	// const $root = $form.closest('.bqf');
 
-	if ( !$root || !results ) {
-		return;
-	}
+	// if ( !$root || !results ) {
+	// 	return;
+	// }
 
-	const $wrap = $root.querySelector('.bqf-results-wrap');
+	const $wrap = document.querySelector('.bqf-results-wrap');
+	console.log( $wrap );
 
 	if ( ! $wrap ) {
 		return;
@@ -639,7 +640,7 @@ function bqfFillResults( $form, results ) {
 }
 
 function bqfScrollToResults( $form ) {
-	const $results = $form.closest( '.bqf' )?.querySelector( '.bqf-results-container' );
+	const $results = document.querySelector('.bqf-results-container');
 
 	if ( ! $results ) {
 		return;

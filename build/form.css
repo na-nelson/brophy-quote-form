@@ -20,34 +20,11 @@
   --bqf-f-display: 'Nippo', serif ;
 }
 
-.bqf-results-container {
-  display: none;
-}
-
-.bqf-has-results-section {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2em;
-}
-@media (min-width: 900px) {
-  .bqf-has-results-section {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-.bqf-has-results-section .bqf-results-container {
-  display: block;
-}
-@media (min-width: 900px) {
-  .bqf-has-results-section .bqf-results-container {
-    order: -1;
-  }
-}
-
 .brophy-quote-form {
   font-size: 1rem;
 }
 
-.bqf-form-container {
+.bqf-form-wrap {
   container-type: inline-size;
 }
 
@@ -65,6 +42,16 @@
 
 .bqf-form-body {
   padding-top: 2rem;
+}
+
+.bqf-form-header-top {
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--bqf-c-border);
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+.bqf-form-header-top .heading {
+  margin: 0;
 }
 
 .bqf-form-header {
@@ -332,12 +319,6 @@
   cursor: pointer;
 }
 
-.bqf-form--intro .bqf-form-header {
-  margin-bottom: 0;
-  border-bottom: 1px solid var(--bqf-c-border);
-  padding: 1rem 1.5rem;
-  text-align: center;
-}
 .bqf-form--intro .bqf-form-body {
   padding-top: 0.5em;
 }

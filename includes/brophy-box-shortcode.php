@@ -103,7 +103,6 @@ function bqf_render_quote_form( $atts ) {
 		} else {
 			include BQF_PATH . 'includes/partials/form-full.php';
 		}
-		include BQF_PATH . 'includes/partials/results.php';
 		?>
 	</div>
 	<?php
@@ -111,3 +110,25 @@ function bqf_render_quote_form( $atts ) {
 	return ob_get_clean();
 }
 add_shortcode( 'brophy_quote_form', 'bqf_render_quote_form' );
+
+
+/**
+ * Print the quote results.
+ *
+ * @return string
+ */
+function bqf_render_quote_results( $atts ) {
+	bqf_enqueue_form_assets();
+
+	ob_start();
+	?>
+	<div class="brophy-quote-results bqf">
+		<?php
+		include BQF_PATH . 'includes/partials/results.php';
+		?>
+	</div>
+	<?php
+
+	return ob_get_clean();
+}
+add_shortcode( 'brophy_quote_results', 'bqf_render_quote_results' );

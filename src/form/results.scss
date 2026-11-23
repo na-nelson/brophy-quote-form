@@ -1,14 +1,10 @@
 @use '../scss/variables' as *;
 
 .bqf-results-wrap {
-    // display: none;
     height: 0;
-    // overflow: clip;
 
     &.active {
-        // display: block;
         height: auto;
-        // overflow: visible;
     }
 }
 
@@ -37,7 +33,6 @@
 }
 
 .bqf-results__section-label {
-    // margin-bottom: 1em;
     font-size: 1.1rem;
     font-weight: 700;
 }
@@ -145,12 +140,6 @@
         font-size: 0.8em;
     }
 }
-
-// .bqf-results__bottom {
-//     margin-top: 1rem;
-//     border-top: 1px solid;
-//     padding-top: 1rem;
-// }
 
 .bqf-results__footer {
     margin-top: 1.5rem;

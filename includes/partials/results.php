@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 <div class="bqf-results-container">
-	<h2>Results</h2>
 
 	<div class="bqf-results-error">
 		<div class="bqf-results-error__zip">
