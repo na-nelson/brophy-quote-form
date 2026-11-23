@@ -328,7 +328,7 @@ function bqf_submit_quote() {
 	// ================================================================================
 	// Success
 	// ================================================================================
-	$arr_response['message'] = 'Quote sent.';
+	$arr_response['message'] = 'Quote delivered!';
 
 	bqf_store_submission( $arr_response );
 	wp_send_json_success($arr_response, 200);

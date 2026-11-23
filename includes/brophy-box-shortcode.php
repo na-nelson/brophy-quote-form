@@ -80,6 +80,7 @@ function bqf_render_quote_form( $atts ) {
 		array(
 			'results_page' => '',
 			'form_type' => 'full',
+			'heading' => '',
 		),
 		$atts,
 		'brophy_quote_form'

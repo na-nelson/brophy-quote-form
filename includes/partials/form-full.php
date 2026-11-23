@@ -152,7 +152,8 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 				<div class="bqf-form-row">
 					<label class="bqf-field" data-group-field="phone">
 						<span class="bqf-label-text">Phone<span class="bqf-required">*</span></span>
-						<input type="tel" name="phone" placeholder="Your phone number"
+						<input type="tel" name="phone" placeholder="(000) 000-0000"
+							pattern="^\(\d{3}\) \d{3}-\d{4}$"
 							required
 						/>
 					</label>

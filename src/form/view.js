@@ -120,7 +120,7 @@ function bqfFieldMessage( field, value ) {
 		return 'Delivery and pickup are not available on Sundays.';
 	}
 
-	if ( field.name === 'phone' && ! bqfValidUsPhone( trimmed ) ) {
+	if ( field.name === 'phone' && ! bqfValidUsPhone( trimmed.replace( /\D/g, '' ) ) ) {
 		return 'Enter a 10-digit phone number.';
 	}
 
@@ -129,6 +129,61 @@ function bqfFieldMessage( field, value ) {
 
 function bqfValidUsPhone( digits ) {
 	return digits.length === 10 || ( digits.length === 11 && digits.startsWith( '1' ) );
+}
+
+function bqfPhoneDigits( value ) {
+	let digits = ( value || '' ).replace( /\D/g, '' );
+
+	if ( digits.length === 11 && digits.startsWith( '1' ) ) {
+		digits = digits.slice( 1 );
+	}
+
+	return digits.slice( 0, 10 );
+}
+
+function bqfFormatPhone( value ) {
+	const digits = bqfPhoneDigits( value );
+
+	if ( ! digits ) {
+		return '';
+	}
+
+	let index = 0;
+
+	return '(___) ___-____'.replace( /_/g, () => digits.charAt( index++ ) || '_' );
+}
+
+function bqfPlacePhoneCaret( $input ) {
+	if ( $input.selectionStart !== $input.selectionEnd ) {
+		return;
+	}
+
+	const slot = $input.value.indexOf( '_' );
+	const caret = slot === -1 ? $input.value.length : slot;
+
+	$input.setSelectionRange( caret, caret );
+}
+
+function bqfApplyPhoneFormat( $input, inputType ) {
+	const previousDigits = $input.dataset.bqfPhoneDigits || '';
+	let digits = bqfPhoneDigits( $input.value );
+
+	if (
+		inputType === 'deleteContentBackward' &&
+		digits.length >= previousDigits.length &&
+		previousDigits
+	) {
+		digits = previousDigits.slice( 0, -1 );
+	}
+
+	const formatted = bqfFormatPhone( digits );
+
+	$input.value = formatted;
+	$input.dataset.bqfPhoneDigits = digits;
+
+	if ( document.activeElement === $input ) {
+		bqfPlacePhoneCaret( $input );
+	}
 }
 
 function bqfClearErrors( $form ) {
@@ -215,7 +270,7 @@ function bqfValidateForm( $form ) {
 		}
 
 		if ( field.name === 'phone' ) {
-			$control.value = ( $control.value || '' ).replace( /\D/g, '' );
+			bqfApplyPhoneFormat( $control );
 		}
 
 		const message = bqfFieldMessage( field, $control.value || '' );
@@ -273,6 +328,10 @@ function bqfApplyQuoteValues( $form, values ) {
 		}
 
 		$controls[0].value = value ?? '';
+
+		if ( name === 'phone' ) {
+			bqfApplyPhoneFormat( $controls[0] );
+		}
 	} );
 }
 
@@ -308,6 +367,32 @@ function bqfGetPendingQuote() {
 }
 
 document.querySelectorAll('.bqf-form').forEach( ( $form ) => {
+	const $phone = $form.querySelector( '[name="phone"]' );
+
+	if ( $phone ) {
+		$phone.addEventListener( 'input', ( event ) => {
+			bqfApplyPhoneFormat( $phone, event.inputType );
+		} );
+
+		$phone.addEventListener( 'click', () => {
+			bqfPlacePhoneCaret( $phone );
+		} );
+
+		$phone.addEventListener( 'keyup', ( event ) => {
+			if ( event.shiftKey ) {
+				return;
+			}
+
+			if ( [ 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End' ].includes( event.key ) ) {
+				bqfPlacePhoneCaret( $phone );
+			}
+		} );
+
+		if ( $phone.value ) {
+			bqfApplyPhoneFormat( $phone );
+		}
+	}
+
 	$form.addEventListener('submit', ( event ) => {
 		bqfHandleSubmit( event, $form );
 	});
@@ -412,6 +497,10 @@ function bqfSetZipError( $form, isActive ) {
 
 	$zipError.classList.toggle('active', isActive);
 	$wrap?.classList.remove('active');
+
+	if ( isActive ) {
+		bqfScrollToResults( $form );
+	}
 }
 
 function bqfMoney( amount ) {
@@ -546,4 +635,18 @@ function bqfFillResults( $form, results ) {
 	}
 
 	$wrap.classList.add('active');
+	bqfScrollToResults( $form );
+}
+
+function bqfScrollToResults( $form ) {
+	const $results = $form.closest( '.bqf' )?.querySelector( '.bqf-results-container' );
+
+	if ( ! $results ) {
+		return;
+	}
+
+	$results.scrollIntoView( {
+		behavior: 'smooth',
+		block: 'start',
+	} );
 }

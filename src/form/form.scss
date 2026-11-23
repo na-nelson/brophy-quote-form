@@ -6,12 +6,19 @@
 
 .bqf-has-results-section {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	gap: 2em;
+
+	@media (min-width: 900px) {
+		grid-template-columns: 1fr 1fr;
+	}
 
 	.bqf-results-container {
 		display: block;
-		order: -1;
+
+		@media (min-width: 900px) {
+			order: -1;
+		}
 	}
 }
 
@@ -372,6 +379,13 @@
 // Intro Form
 // ================================================================================
 .bqf-form--intro {
+	.bqf-form-header {
+		margin-bottom: 0;
+		border-bottom: 1px solid var(--bqf-c-border);
+		padding: 1rem 1.5rem;
+		text-align: center;
+	}
+
 	.bqf-form-body {
 		padding-top: 0.5em;
 	}

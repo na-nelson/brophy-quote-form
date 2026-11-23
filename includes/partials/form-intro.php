@@ -28,7 +28,25 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 			<?php wp_nonce_field( 'bqf_submit_quote', 'bqf_nonce' ); ?>
 			<input type="hidden" name="action" value="bqf_submit_quote" />
 
+			<?php if ( $atts['heading'] ) : ?>
+				<header class="bqf-form-header">
+					<h3 class="heading"><?php echo esc_html( $atts['heading'] ); ?></h3>
+				</header>
+			<?php endif; ?>
+
+			<div class="bqf-field-group bqf-field-group--quote-type">
+				<label class="bqf-radio-group" for="quote-type-purchase">
+					<input id="quote-type-purchase" type="radio" name="quote-type" value="Purchase" checked />
+					<span class="bqf-type-label-text">Purchase</span>
+				</label>
+				<label class="bqf-radio-group" for="quote-type-rent">
+					<input id="quote-type-rent" type="radio" name="quote-type" value="Rental" />
+					<span class="bqf-type-label-text">Rental</span>
+				</label>
+			</div>
+
 			<div class="bqf-form-body">
+				<?php /*
                 <div class="bqf-form-row bqf-form-row--radio">
                     <span class="bqf-label-text">Purchase or Rental?<span class="bqf-required">*</span></span>
 
@@ -41,6 +59,7 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
                         <span class="bqf-type-label-text">Rental</span>
                     </label>
 				</div>
+				*/ ?>
 
 				<div class="bqf-form-row">
 					<label class="bqf-field" data-group-field="zip">
