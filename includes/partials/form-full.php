@@ -114,7 +114,7 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 					</label>
 				</div>
 
-				<div class="bqf-form-row">
+				<!-- <div class="bqf-form-row">
 					<label class="bqf-field" data-group-field="delivery-date">
 						<span class="bqf-label-text">Preferred delivery date<span class="bqf-required">*</span></span>
 						<input type="date" name="delivery-date" placeholder="When would you like your container delivered?"
@@ -122,7 +122,7 @@ $form_type = isset($atts['form_type']) ? $atts['form_type'] : 'full';
 							required
 						/>
 					</label>
-				</div>
+				</div> -->
 
 				<div class="bqf-form-row">
 					<label class="bqf-field" data-group-field="email">

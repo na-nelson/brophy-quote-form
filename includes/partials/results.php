@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<div class="bqf-results-error">
 		<div class="bqf-results-error__zip">
-			<?php echo wp_kses_post( bqf_get_zip_error_message() ); ?>
+			<?php echo wp_kses_post( wpautop( bqf_get_zip_error_message() ) ); ?>
 		</div>
 	</div>
 
