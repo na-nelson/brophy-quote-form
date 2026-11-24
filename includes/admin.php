@@ -228,41 +228,65 @@ function bqf_render_options_page() {
 		wp_die( esc_html__( 'Sorry, you are not allowed to access this page.', 'brophy-quote-form' ), 403 );
 	}
 
-	echo '<div class="bqf-options-wrap">';
-	echo '<h1>Options</h1>';
+	ob_start();
+	?>
 
-	echo '<h2>Quote Form Shortcode Options</h2>';
+	<div class="bqf-options-wrap">
+		<h1>Options</h1>
 
-	echo '<div class="bqf-options-item">';
-	echo '<p>The default option has both the form and results in the same page.</p>';
-	echo '<code>[brophy_quote_form]</code>';
-	echo '</div>';
+		<h2>Quote Form Shortcode Options</h2>
 
-	echo '<div class="bqf-options-item">';
-	echo '<p>Add <span class="inline-mono">results_page</span> to show the full form and have the results display on a separate page.</p>';
-	echo '<code>[brophy_quote_form results_page="/example/page-path"]</code>';
-	echo '</div>';
+		<div class="bqf-options-item">
+			<p>The default option has both the form and results in the same page.</p>
+			<code>[brophy_quote_form]</code>
+		</div>
 
-	echo '<div class="bqf-options-item">';
-	echo '<p>Add <span class="inline-mono">form_type="intro"</span> to show an abbreviated form. This option requires a <span class="inline-mono">results_page</span> to be set.</p>';
-	echo '<code>[brophy_quote_form form_type="intro" results_page="/example/page-path"]</code>';
-	echo '</div>';
+		<div class="bqf-options-item">
+			<p>Add <span class="inline-mono">results_page</span> to show the full form and have the results display on a separate page.</p>
+			<code>[brophy_quote_form results_page="/example/page-path"]</code>
+		</div>
 
-	echo '<div class="bqf-options-item">';
-	echo '<p>Add <span class="inline-mono">heading="Your Heading Here"</span> to display a custom heading above the form.</p>';
-	echo '<code>[brophy_quote_form heading="Your Heading Here"]</code>';
-	echo '</div>';
+		<div class="bqf-options-item">
+			<p>Add <span class="inline-mono">form_type="intro"</span> to show an abbreviated form. This option requires a <span class="inline-mono">results_page</span> to be set.</p>
+			<code>[brophy_quote_form form_type="intro" results_page="/example/page-path"]</code>
+		</div>
 
-	echo '<hr>';
+		<div class="bqf-options-item">
+			<p>Add <span class="inline-mono">heading="Your Heading Here"</span> to display a custom heading above the form.</p>
+			<code>[brophy_quote_form heading="Your Heading Here"]</code>
+		</div>
 
-	echo '<h2>Quote Results Shortcode Options</h2>';
+		<hr>
 
-	echo '<div class="bqf-options-item">';
-	echo '<p><strong><u>The Results shortcode is required</u></strong> to be included in a page that displays the results.</p>';
-	echo '<code>[brophy_quote_results]</code>';
-	echo '</div>';
+		<h2>Quote Results Shortcode Options</h2>
 
-	echo '</div>';
+		<div class="bqf-options-item">
+			<p><strong><u>The Results shortcode is required</u></strong> to be included in a page that displays the results.</p>
+			<code>[brophy_quote_results]</code>
+		</div>
+
+		<div class="bqf-options-item">
+			<p>Add <span class="inline-mono">form_type="intro"</span> to be able to display the ZIP code error when using an intro form.</p>
+			<code>[brophy_quote_results form_type="intro"]</code>
+		</div>
+
+		<hr>
+
+		<h2>PHP Functions</h2>
+
+		<div class="bqf-options-item">
+			<p>Get lookup data from the connected Airtable tables using the <span class="inline-mono">bb_get_airtable_table()</span> function.<br/>
+			available tables: <span class="inline-mono"><?php echo implode(', ', array_keys(BB_TABLES)); ?></span></p>
+			<code><pre>
+if (function_exists('bb_get_airtable_table')) {
+    $zip_codes = bb_get_airtable_table('zip_codes');
+    var_dump($zip_codes[22191]);
+}</pre></code>
+		</div>
+	</div>
+
+	<?php
+	echo ob_get_clean();
 }
 
 /**

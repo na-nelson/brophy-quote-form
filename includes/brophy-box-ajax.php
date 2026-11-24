@@ -14,6 +14,42 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 add_action( 'wp_ajax_bqf_submit_quote', 'bqf_submit_quote' );
 add_action( 'wp_ajax_nopriv_bqf_submit_quote', 'bqf_submit_quote' );
+add_action( 'wp_ajax_bqf_check_zip', 'bqf_check_zip' );
+add_action( 'wp_ajax_nopriv_bqf_check_zip', 'bqf_check_zip' );
+
+/**
+ * Report whether a ZIP is in the saved lookup. Does not store or send a quote.
+ */
+function bqf_check_zip() {
+	if ( ! check_ajax_referer( 'bqf_submit_quote', 'bqf_nonce', false ) ) {
+		wp_send_json_error(
+			array(
+				'message' => 'The form expired. Refresh the page and try again.',
+				'error'   => null,
+			),
+			403
+		);
+	}
+
+	$zip       = isset( $_POST['zip'] ) ? sanitize_text_field( wp_unslash( $_POST['zip'] ) ) : '';
+	$zip_codes = bb_get_airtable_table( 'zip_codes' );
+	$zip_within_range = isset( $zip_codes[ $zip ]['pricing-zone-id'] ) && '' !== $zip_codes[ $zip ]['pricing-zone-id'];
+
+	if ( ! $zip_within_range ) {
+		wp_send_json_error(
+			array(
+				'error' => 'zip',
+			),
+			400
+		);
+	}
+
+	wp_send_json_success(
+		array(
+			'error' => null,
+		)
+	);
+}
 
 function bqf_submit_quote() {
 	// get data tables

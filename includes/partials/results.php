@@ -8,6 +8,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+$is_intro_form = false;
+
+if ( isset($atts['form_type']) && 'intro' === $atts['form_type'] ) {
+	$is_intro_form = true;
+}
+
 ?>
 <div class="bqf-results-container">
 
@@ -17,83 +24,85 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 	</div>
 
-	<div class="bqf-results-wrap">
-		<div class="bqf-results-box">
-			<div class="bqf-results__section">
-				<div class="bqf-results__section-label">Containers</div>
-				<div class="bqf-results__row row-size-20">
-					<span class="row-label">20 Footer</span>
-					<span class="row-value size-20-value">
-						<span class="qty"></span> 
-						<span class="unit-price"></span>
-					</span>
-				</div>
-				<div class="bqf-results__row row-size-40">
-					<span class="row-label">40 Footer</span>
-					<span class="row-value size-40-value">
-						<span class="qty"></span> 
-						<span class="unit-price"></span>
-					</span>
+	<?php if ( !$is_intro_form ) : ?>
+		<div class="bqf-results-wrap">
+			<div class="bqf-results-box">
+				<div class="bqf-results__section">
+					<div class="bqf-results__section-label">Containers</div>
+					<div class="bqf-results__row row-size-20">
+						<span class="row-label">20 Footer</span>
+						<span class="row-value size-20-value">
+							<span class="qty"></span> 
+							<span class="unit-price"></span>
+						</span>
+					</div>
+					<div class="bqf-results__row row-size-40">
+						<span class="row-label">40 Footer</span>
+						<span class="row-value size-40-value">
+							<span class="qty"></span> 
+							<span class="unit-price"></span>
+						</span>
+					</div>
+
+					<div class="bqf-results__row bqf-results__row-subtotal row-lines-subtotal">
+						<span class="row-label">Subtotal</span>
+						<span class="row-value lines-subtotal-value">
+							<span class="unit-price"></span>
+						</span>
+					</div>
+					<div class="bqf-results__row bqf-results__row-discount row-lines-discount">
+						<span class="row-label">Discount</span>
+						<span class="row-value lines-discount-value">
+							<span class="unit-price"></span>
+							<span class="lines-discount-message"></span>
+						</span>
+					</div>
+					<div class="bqf-results__row bqf-results__row-subtotal row-lines-discounted-subtotal">
+						<span class="row-label">Discounted subtotal</span>
+						<span class="row-value lines-discounted-subtotal-value">
+							<span class="unit-price"></span>
+						</span>
+					</div>
 				</div>
 
-				<div class="bqf-results__row bqf-results__row-subtotal row-lines-subtotal">
-					<span class="row-label">Subtotal</span>
-					<span class="row-value lines-subtotal-value">
-						<span class="unit-price"></span>
-					</span>
+				<div class="bqf-results__section">
+					<div class="bqf-results__section-label">Transportation</div>
+					<div class="bqf-results__row row-delivery">
+						<span class="row-label">Delivery</span>
+						<span class="row-value delivery-value">
+							<span class="qty"></span> 
+							<span class="unit-price"></span>
+						</span>
+					</div>
+					<div class="bqf-results__row row-pickup">
+						<span class="row-label">Pickup</span>
+						<span class="row-value pickup-value">
+							<span class="qty"></span> 
+							<span class="unit-price"></span>
+						</span>
+					</div>
+
+					<div class="bqf-results__row bqf-results__row-subtotal row-charges-subtotal">
+						<span class="row-label">Subtotal</span>
+						<span class="row-value charges-subtotal-value">
+							<span class="unit-price"></span>
+						</span>
+					</div>
 				</div>
-				<div class="bqf-results__row bqf-results__row-discount row-lines-discount">
-					<span class="row-label">Discount</span>
-					<span class="row-value lines-discount-value">
-						<span class="unit-price"></span>
-						<span class="lines-discount-message"></span>
-					</span>
+
+				<div class="bqf-results__total-section">
+					<span class="total-label">Total</span>
+					<span class="total-value"></span>
+					<div class="discount">
+						<span class="discount-value"></span>
+						<span class="discount-message"></span>
+					</div>
 				</div>
-				<div class="bqf-results__row bqf-results__row-subtotal row-lines-discounted-subtotal">
-					<span class="row-label">Discounted subtotal</span>
-					<span class="row-value lines-discounted-subtotal-value">
-						<span class="unit-price"></span>
-					</span>
-				</div>
+
+				<footer class="bqf-results__footer">
+					<a href="tel:5713646702" class="btn">Call to book: (571) 364-6702</a>
+				</footer>
 			</div>
-
-			<div class="bqf-results__section">
-				<div class="bqf-results__section-label">Transportation</div>
-				<div class="bqf-results__row row-delivery">
-					<span class="row-label">Delivery</span>
-					<span class="row-value delivery-value">
-						<span class="qty"></span> 
-						<span class="unit-price"></span>
-					</span>
-				</div>
-				<div class="bqf-results__row row-pickup">
-					<span class="row-label">Pickup</span>
-					<span class="row-value pickup-value">
-						<span class="qty"></span> 
-						<span class="unit-price"></span>
-					</span>
-				</div>
-
-				<div class="bqf-results__row bqf-results__row-subtotal row-charges-subtotal">
-					<span class="row-label">Subtotal</span>
-					<span class="row-value charges-subtotal-value">
-						<span class="unit-price"></span>
-					</span>
-				</div>
-			</div>
-
-			<div class="bqf-results__total-section">
-				<span class="total-label">Total</span>
-				<span class="total-value"></span>
-				<div class="discount">
-					<span class="discount-value"></span>
-					<span class="discount-message"></span>
-				</div>
-			</div>
-
-			<footer class="bqf-results__footer">
-				<a href="tel:5713646702" class="btn">Call to book: (571) 364-6702</a>
-			</footer>
 		</div>
-	</div>
+	<?php endif; ?>
 </div>

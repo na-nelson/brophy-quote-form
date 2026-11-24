@@ -127,6 +127,43 @@ function bqfFieldMessage( field, value ) {
 	return '';
 }
 
+
+// ========== validate quantities ==========
+function bqfValidateQuantities( $form ) {
+	const $qty20 = $form.querySelector( '[name="qty-20"]' );
+	const $qty40 = $form.querySelector( '[name="qty-40"]' );
+
+	if ( ! $qty20 && ! $qty40 ) {
+		return true;
+	}
+
+	const qty20 = $qty20 ? Number( $qty20.value ) : 0;
+	const qty40 = $qty40 ? Number( $qty40.value ) : 0;
+
+	if ( qty20 > 0 || qty40 > 0 ) {
+		return true;
+	}
+
+	[ $qty20, $qty40 ].forEach( ( $control ) => {
+		if ( $control ) {
+			$control.setAttribute( 'aria-invalid', 'true' );
+		}
+	} );
+
+	const $row = $form.querySelector( '.bqf-form-row--qty' );
+
+	if ( $row ) {
+		const $error = document.createElement( 'div' );
+		$error.className = 'bqf-field-error';
+		$error.textContent = 'Choose at least one container.';
+		$row.appendChild( $error );
+	}
+
+	return false;
+}
+
+
+// ========== phone pattern ==========
 function bqfValidUsPhone( digits ) {
 	return digits.length === 10 || ( digits.length === 11 && digits.startsWith( '1' ) );
 }
@@ -186,6 +223,8 @@ function bqfApplyPhoneFormat( $input, inputType ) {
 	}
 }
 
+
+// ========== show / hide errors ==========
 function bqfClearErrors( $form ) {
 	$form.querySelectorAll( '.bqf-field-error' ).forEach( ( $error ) => {
 		$error.remove();
@@ -211,39 +250,8 @@ function bqfShowError( $control, message ) {
 	$field.appendChild( $error );
 }
 
-function bqfValidateQuantities( $form ) {
-	const $qty20 = $form.querySelector( '[name="qty-20"]' );
-	const $qty40 = $form.querySelector( '[name="qty-40"]' );
 
-	if ( ! $qty20 && ! $qty40 ) {
-		return true;
-	}
-
-	const qty20 = $qty20 ? Number( $qty20.value ) : 0;
-	const qty40 = $qty40 ? Number( $qty40.value ) : 0;
-
-	if ( qty20 > 0 || qty40 > 0 ) {
-		return true;
-	}
-
-	[ $qty20, $qty40 ].forEach( ( $control ) => {
-		if ( $control ) {
-			$control.setAttribute( 'aria-invalid', 'true' );
-		}
-	} );
-
-	const $row = $form.querySelector( '.bqf-form-row--qty' );
-
-	if ( $row ) {
-		const $error = document.createElement( 'div' );
-		$error.className = 'bqf-field-error';
-		$error.textContent = 'Choose at least one container.';
-		$row.appendChild( $error );
-	}
-
-	return false;
-}
-
+// ========== validate form ==========
 function bqfValidateForm( $form ) {
 	const quoteType = bqfQuoteType( $form );
 	let valid = true;
@@ -426,12 +434,62 @@ async function bqfHandleSubmit( event, $form ) {
 	}
 
 	const resultsPage = $form.dataset.resultsPage;
+	const isIntro = Boolean( $form.closest( '.bqf-form--intro' ) );
 
+	// ===== intro form handling =====
+	if ( resultsPage && isIntro ) {
+		$btnSubmit.disabled = true;
+		$form.classList.add( 'loading' );
+		$statusText.classList.remove( 'active' );
+		bqfSetZipError( $form, false );
+
+		try {
+			const body = new FormData( $form );
+			body.set( 'action', 'bqf_check_zip' );
+
+			const response = await fetch( $form.getAttribute( 'action' ), {
+				method: 'POST',
+				body,
+			} );
+			const result = await response.json();
+
+			if ( ! result ) {
+				throw new Error( 'Something went wrong.' );
+			}
+
+			if ( result.data?.error === 'zip' ) {
+				bqfSetZipError( $form, true );
+
+				const $zip = $form.querySelector( '[name="zip"]' );
+
+				if ( $zip ) {
+					bqfShowError( $zip, 'ZIP code not found.' );
+				}
+			} else if ( result.success && bqfStoreQuote( $form ) ) {
+				window.location.assign( resultsPage );
+				return;
+			} else {
+				$statusText.classList.add( 'active' );
+				$statusText.textContent = result.data?.message ? result.data.message : 'Something went wrong.';
+			}
+		} catch ( error ) {
+			bqfSetZipError( $form, false );
+			$statusText.classList.add( 'active' );
+			$statusText.textContent = 'Something went wrong.';
+		}
+
+		$btnSubmit.disabled = false;
+		$form.classList.remove( 'loading' );
+		return;
+	}
+
+	// ===== redirect page? =====
 	if ( resultsPage && bqfStoreQuote( $form ) ) {
 		window.location.assign( resultsPage );
 		return;
 	}
 
+	// ===== full form handling =====
 	$btnSubmit.disabled = true;
 	$form.classList.add('loading');
 	$statusText.classList.remove('active');
@@ -482,21 +540,15 @@ async function bqfHandleSubmit( event, $form ) {
 // Handling results
 // ================================================================================
 function bqfSetZipError( $form, isActive ) {
-	const $root = $form.closest( '.bqf' );
+	const $zipError = document.querySelector( '.bqf-results-error__zip' );
+	const $wrap = document.querySelector( '.bqf-results-wrap' );
 
-	if ( !$root ) {
+	if ( ! $zipError ) {
 		return;
 	}
 
-	const $zipError = $root.querySelector( '.bqf-results-error__zip' );
-	const $wrap = $root.querySelector('.bqf-results-wrap');
-
-	if ( !$zipError ) {
-		return;
-	}
-
-	$zipError.classList.toggle('active', isActive);
-	$wrap?.classList.remove('active');
+	$zipError.classList.toggle( 'active', isActive );
+	$wrap?.classList.remove( 'active' );
 
 	if ( isActive ) {
 		bqfScrollToResults( $form );

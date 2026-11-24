@@ -118,6 +118,14 @@ add_shortcode( 'brophy_quote_form', 'bqf_render_quote_form' );
  * @return string
  */
 function bqf_render_quote_results( $atts ) {
+	$atts = shortcode_atts(
+		array(
+			'form_type' => 'full',
+		),
+		$atts,
+		'brophy_quote_results'
+	);
+
 	bqf_enqueue_form_assets();
 
 	ob_start();
