@@ -463,7 +463,7 @@ async function bqfHandleSubmit( event, $form ) {
 				const $zip = $form.querySelector( '[name="zip"]' );
 
 				if ( $zip ) {
-					bqfShowError( $zip, 'ZIP code not found.' );
+					bqfShowError( $zip, 'ZIP code not in our service area.' );
 				}
 			} else if ( result.success && bqfStoreQuote( $form ) ) {
 				window.location.assign( resultsPage );
@@ -515,7 +515,7 @@ async function bqfHandleSubmit( event, $form ) {
 			const $zip = $form.querySelector( '[name="zip"]' );
 
 			if ( $zip ) {
-				bqfShowError( $zip, 'ZIP code not found.' );
+				bqfShowError( $zip, 'ZIP code not in our service area.' );
 			}
 		} else {
 			if ( result.success && result.data?.results ) {
